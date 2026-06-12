@@ -1,0 +1,28 @@
+# Dependencies (Frontend aur Backend dono ki node_modules hatayega)
+node_modules/
+dist/
+.pnp
+.pnp.js
+
+# Testing
+coverage/
+
+# Production Builds (Frontend ka build/dist folder)
+build/
+dist/
+
+# Environment Variables (Dono folders ki secret files)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS Files
+.DS_Store
+Thumbs.db

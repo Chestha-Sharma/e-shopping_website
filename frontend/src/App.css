@@ -1,0 +1,47 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+//    packag.json me script ans site sgtart karne ka tarika
+// Iska kya matlab hai?
+// NPM scripts isi tarah kaam karti hain. Jab aap terminal me npm run <script-name> likhte hain, toh npm is list me se us naam ko dhundhta hai aur uske aage likhi hui command ko execute kar deta hai.
+
+// Jab aap npm run start (ya sirf npm start) likhenge, toh npm piche se "react-scripts start" run karega, jisse aapka Create React App ka development server chalu ho jayega.
+
+// Kyunki is list me "dev" naam ka koi script nahi likha hai, isiliye jab aapne npm run dev chalaya toh usne Missing script: "dev" ka error de diya.
