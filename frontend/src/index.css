@@ -57,3 +57,9 @@ main{
 }
 /* // for line 40 isse footer ko hamesha bottom par rakhne me madad milegi chahe content kam ho ya zyada ho kyoki isme min height 100vh hai aur flex column hai to footer hamesha bottom par rahega 100vh ka matlab hai viewport height yani ki screen ki height ke barabar aur flex column ka matlab hai ki elements vertically arrange honge to jab content kam hoga to footer bottom par rahega aur jab content zyada hoga to footer content ke niche rahega.
 //site container ke andar header maina and footer sab h to isliye isne sabko select kiya jiski min height hamne 100vh kar kiya hai taki pura screen cover ho jaye aur footer hamesha bottom par rahe chahe content kam ho ya zyada ho. */
+
+
+
+.img-thumbnail{
+  height : 80px;
+}

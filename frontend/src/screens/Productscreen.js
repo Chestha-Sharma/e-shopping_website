@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useContext, useEffect, useReducer } from 'react';
 import { Badge, Button, Card, Col, ListGroup, Row } from 'react-bootstrap';
 import { Helmet } from 'react-helmet-async';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Loading from '../components/Loading';
 import Msg from '../components/MassageBox';
 import Rating from '../components/Rating';
@@ -21,6 +21,7 @@ const reducer = (state, action) => {
   }
 };
 function ProductScreen() {
+  const navigate = useNavigate();
   const param = useParams();
   const { slug } = param;
   const [{ loading, error, product }, dispatch] = useReducer(reducer, {
@@ -61,6 +62,7 @@ function ProductScreen() {
       type: 'CART_ADD_ITEM',
       payload: { ...product, quantity},
     }); 
+     navigate('/cart');
   };
   //   Yahan par type ka kaam ek "Label" ya "Instruction" ki tarah hota hai.
   // Jab aap ctxDispatch call karte hain, toh aap Reducer function ko ek signal bhej rahe hote hain. Reducer ke paas bahut saare kaam ho sakte hain (jaise item add karna, item remove karna, ya cart clear karna). type hi wo cheez hai jo Reducer ko batati hai ki kaunsa logic execute karna hai.
