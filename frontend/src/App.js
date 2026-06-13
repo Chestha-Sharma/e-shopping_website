@@ -2,7 +2,7 @@
 //chaho to frontend ke data.js ko delete bhi kar sakte h kyoki ab ham backend se data fetch kar rhe h to ab backend ko bhi ek terminal me permemnent on rahna hoga taki jab bhi frontend se backend se data fetch karne ki request aaye to backend se data mil sake aur frontend me show ho sake.
 import { BrowserRouter ,Route,Routes ,Link } from "react-router-dom";
 import Homescreen from "./screens/Homescreen";
- import Productscreenuct from "./screens/Productscreen";
+import ProductScreen from "./screens/Productscreen";
 import { Badge, Container, Nav, Navbar } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { useContext } from "react";
@@ -41,7 +41,7 @@ function App() {
       <Container className="mt-3">
       <Routes>
         <Route path="/" element={<Homescreen />} />
-        <Route path="/product/:slug" element={<Productscreenuct />} />
+        <Route path="/product/:slug" element={<ProductScreen />} />
       </Routes>
       </Container>
      </main>

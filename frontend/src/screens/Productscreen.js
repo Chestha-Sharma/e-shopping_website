@@ -47,11 +47,15 @@ function ProductScreen() {
   //dispatch: ctxDispatch dispatch is renamed to ctxDispatch because we are using dispatch in this component and we are also using dispatch in the global state management so to avoid confusion we are renaming dispatch to ctxDispatch.
   const addToCartHandler = async () => {
     const existItem = cart.cartItems.find((x) => x._id === product._id);
-    const quantity = existItem ? existItem.quantity + 1 : 1;
+    const quantity = existItem ? existItem.quantity + 1 : 1;  
+    try {
     const { data } = await axios.get(`/api/products/${product._id}`);
-    if (data.countInStock < quantity) {
-      window.alert('Sorry. Product is out of stock');
-      return;
+    } catch (error) {
+        console.log(error);
+    }
+    if (product.countInStock < quantity) {
+        window.alert('Sorry. Product is out of stock');
+        return;
     }
     ctxDispatch({
       type: 'CART_ADD_ITEM',
