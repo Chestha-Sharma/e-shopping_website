@@ -38,8 +38,10 @@ import { createContext, useReducer } from 'react';
 export const Store = createContext();
 
 const initialState = {
-  cart: {
-    cartItems: [],
+  cart: {  //refresh karne ke baad cart 
+    cartItems: localStorage.getItem('cartItems') //refresh ke baad cart me jo h vo hate na isliye
+      ? JSON.parse(localStorage.getItem('cartItems'))
+      : [], 
   },
 };
 
@@ -56,6 +58,14 @@ function reducer(state, action) {
             item._id === existItem._id ? newItem : item
           )
         : [...state.cart.cartItems, newItem];
+        localStorage.setItem('cartItems',JSON.stringify(cartItems));
+      return { ...state, cart: { ...state.cart, cartItems } };
+    }
+    case 'CART_REMOVE_ITEM': { 
+      const cartItems = state.cart.cartItems.filter(
+        (item) => item._id !== action.payload._id //yaha input me jo id mili h us product ko chhodkar baki products filter karke array me dalkar return kr rhe h
+      );
+       localStorage.setItem('cartItems',JSON.stringify(cartItems));
       return { ...state, cart: { ...state.cart, cartItems } };
     }
     default:

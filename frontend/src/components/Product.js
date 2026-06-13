@@ -8,25 +8,29 @@ import axios from "axios";
 function Product(props) {
   const { product } = props;
   const { state, dispatch: ctxDispatch } = useContext(Store);
-  const { cart } = state;
+  const { cart : { cartItems } } = state;
+ 
 
-  const addToCart = async () => {
-    const existItem = cart.cartItems.find((x) => x._id === product._id);
+   const addtocarthandler = async (item) => {
+    const existItem = cartItems.find((x) => x._id === product._id);
     const quantity = existItem ? existItem.quantity + 1 : 1;  
-    try {
-    const { data } = await axios.get(`/api/products/${product._id}`); 
-    } catch (error) {
-        console.log(error);
-    }
-    if (product.countInStock < quantity) {
-        window.alert('Sorry. Product is out of stock');
-        return;
+    const { data } = await axios.get(`/api/products/${item._id}`);
+    if (data.countInStock < quantity) {
+      window.alert('Sorry. Product is out of stock');
+      return;
     }
     ctxDispatch({
       type: 'CART_ADD_ITEM',
-      payload: { ...product, quantity},
-    }); 
+      payload: { ...item, quantity },
+    });
   };
+  const removeitem = (item) => {
+    ctxDispatch({
+      type: 'CART_REMOVE_ITEM',
+      payload: item,
+    });
+  };
+ 
 
   return (
     <Card>
@@ -39,9 +43,12 @@ function Product(props) {
         </Link>
         <Rating rating={product.rating} numReviews={product.numReviews} />
         <Card.Text>Price: {product.price} /-</Card.Text>
-        <Button className="btn-primary" onClick={addToCart}>
+        {product.countInStock===0?<Button disabled variant="light">Out of Stock</Button>
+        :
+        <Button className="btn-primary" onClick={()=>addtocarthandler(product)}>
           Add to cart
         </Button>
+        } 
       </Card.Body>
     </Card>
   );
