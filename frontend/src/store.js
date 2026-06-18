@@ -33,41 +33,181 @@
 
 
 
+// import { createContext, useContext, useReducer } from 'react';
+
+// export const Store = createContext();
+//  const userInfoFromStorage = localStorage.getItem('userInfo') 
+//   ? JSON.parse(localStorage.getItem('userInfo')) 
+//   : null;
+// const initialState = {
+//   userInfo: userInfoFromStorage, 
+//   //refresh karne ke baad cart ke liye local storage 
+//   // cart: {   
+//   //   cartItems: localStorage.getItem('cartItems') //refresh ke baad cart me jo h vo hate na isliye
+//   //     ? JSON.parse(localStorage.getItem('cartItems'))
+//   //     : [], 
+//   cart: { 
+//     cartItems: userInfoFromStorage
+//       ? (localStorage.getItem(`cartItems_${userInfoFromStorage._id}`)
+//           ? JSON.parse(localStorage.getItem(`cartItems_${userInfoFromStorage._id}`))
+//           : [])
+//       : (localStorage.getItem('cartItems_guest') 
+//           ? JSON.parse(localStorage.getItem('cartItems_guest'))
+//           : []),
+//   },
+// };
+// const {state} = useContext(Store);
+// const {userInfo} = state;
+// function reducer(state, action) {
+//   switch (action.type) {
+//     case 'CART_ADD_ITEM': {
+//       const newItem = action.payload;
+//       const existItem = state.cart.cartItems.find(
+//         (item) => item._id === newItem._id
+//       );
+//       // Agar item pehle se cart mein hai, toh replace/update karo, nahi toh append karo
+//       const cartItems = existItem
+//         ? state.cart.cartItems.map((item) =>
+//             item._id === existItem._id ? newItem : item
+//           )
+//         : [...state.cart.cartItems, newItem];
+//         const cartKey = userInfo ? `cartItems_${userInfo._id}` : 'cartItems_guest';
+//         localStorage.setItem(cartKey, JSON.stringify(cartItems));
+//       return { ...state, cart: { ...state.cart, cartItems } };
+//     }
+//     case 'CART_REMOVE_ITEM': { 
+//       const cartItems = state.cart.cartItems.filter(
+//         (item) => item._id !== action.payload._id //yaha input me jo id mili h us product ko chhodkar baki products filter karke array me dalkar return kr rhe h 
+//       );
+//       const cartKey = userInfo ? `cartItems_${userInfo._id}` : 'cartItems_guest'; 
+//       localStorage.setItem(cartKey, JSON.stringify(cartItems));
+//       return { ...state, cart: { ...state.cart, cartItems } };
+//     }
+//     case 'SIGNIN': {
+//       return { ...state, userInfo: action.payload };
+//     }
+//     case 'SIGNOUT' : {
+//       localStorage.removeItem('user'); 
+//       return {...state,userInfo:null,cart: { cartItems: [] },};
+//     }
+//     default:
+//       return state;
+//   }
+// }
+
+// export function StoreProvider(props) {
+//   const [state, dispatch] = useReducer(reducer, initialState);
+//   const value = { state, dispatch };
+//   return <Store.Provider value={value}>{props.children}</Store.Provider>;
+// }
+
+
 import { createContext, useReducer } from 'react';
+import axios from 'axios';
 
 export const Store = createContext();
 
+// 🚀 डेटाबेस सिंक करने वाला फंक्शन (इसे रिड्यूसर के बाहर रखेंगे)
+const syncCartWithDB = async (userInfo, cartItems) => {
+  if (userInfo && userInfo._id) {
+    try {
+      await axios.put('/api/users/update-cart', {
+        userId: userInfo._id,
+        cartItems: cartItems
+      }, {
+        headers: { Authorization: `Bearer ${userInfo.token}` } 
+      });
+      console.log("Cart synced with MongoDB successfully!");
+    } catch (err) {
+      console.error("Error syncing cart with DB:", err);
+    }
+  }
+};
+
+const userInfoFromStorage = localStorage.getItem('userInfo') 
+  ? JSON.parse(localStorage.getItem('userInfo')) 
+  : null;
+
 const initialState = {
-  cart: {  //refresh karne ke baad cart 
-    cartItems: localStorage.getItem('cartItems') //refresh ke baad cart me jo h vo hate na isliye
-      ? JSON.parse(localStorage.getItem('cartItems'))
-      : [], 
+  userInfo: userInfoFromStorage, 
+  cart: { 
+    cartItems: userInfoFromStorage
+      ? (localStorage.getItem(`cartItems_${userInfoFromStorage._id}`)
+          ? JSON.parse(localStorage.getItem(`cartItems_${userInfoFromStorage._id}`))
+          : [])
+      : (localStorage.getItem('cartItems_guest') 
+          ? JSON.parse(localStorage.getItem('cartItems_guest'))
+          : []),
   },
 };
 
 function reducer(state, action) {
   switch (action.type) {
     case 'CART_ADD_ITEM': {
+      const { userInfo } = state; 
       const newItem = action.payload;
       const existItem = state.cart.cartItems.find(
         (item) => item._id === newItem._id
       );
-      // Agar item pehle se cart mein hai, toh replace/update karo, nahi toh append karo
+      
       const cartItems = existItem
         ? state.cart.cartItems.map((item) =>
             item._id === existItem._id ? newItem : item
           )
         : [...state.cart.cartItems, newItem];
-        localStorage.setItem('cartItems',JSON.stringify(cartItems));
+        
+      const cartKey = userInfo ? `cartItems_${userInfo._id}` : 'cartItems_guest';
+      localStorage.setItem(cartKey, JSON.stringify(cartItems));
+      
+      // 🔥 यहाँ होगा मैजिक: डेटाबेस में सिंक करो
+      syncCartWithDB(userInfo, cartItems);
+      
       return { ...state, cart: { ...state.cart, cartItems } };
     }
+    
     case 'CART_REMOVE_ITEM': { 
+      const { userInfo } = state;
       const cartItems = state.cart.cartItems.filter(
-        (item) => item._id !== action.payload._id //yaha input me jo id mili h us product ko chhodkar baki products filter karke array me dalkar return kr rhe h
+        (item) => item._id !== action.payload._id
       );
-       localStorage.setItem('cartItems',JSON.stringify(cartItems));
+      
+      const cartKey = userInfo ? `cartItems_${userInfo._id}` : 'cartItems_guest'; 
+      localStorage.setItem(cartKey, JSON.stringify(cartItems));
+      
+      // 🔥 यहाँ भी मैजिक: डिलीट होने के बाद डेटाबेस में सिंक करो
+      syncCartWithDB(userInfo, cartItems);
+      
       return { ...state, cart: { ...state.cart, cartItems } };
     }
+    
+    case 'SIGNIN': {
+      const user = action.payload; // सुधारा: action.payload का यूज़ किया
+      const cartKey = `cartItems_${user._id}`;
+      
+      // लॉगिन होते ही डेटाबेस से आई कार्ट को लोकल स्टोरेज में लॉक कर दें
+      localStorage.setItem(cartKey, JSON.stringify(user.cartItems || []));
+      
+      return { 
+        ...state, 
+        userInfo: user, 
+        cart: { ...state.cart, cartItems: user.cartItems || [] }
+      };
+    }
+    
+    case 'SIGNOUT': {
+      localStorage.removeItem('userInfo'); 
+      
+      const guestCart = localStorage.getItem('cartItems_guest')
+        ? JSON.parse(localStorage.getItem('cartItems_guest'))
+        : [];
+        
+      return { 
+        ...state, 
+        userInfo: null, 
+        cart: { ...state.cart, cartItems: guestCart } 
+      };
+    }
+    
     default:
       return state;
   }
@@ -77,4 +217,4 @@ export function StoreProvider(props) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const value = { state, dispatch };
   return <Store.Provider value={value}>{props.children}</Store.Provider>;
-}
+} // ✅ सुधारा: मिसिंग ब्रैकेट यहाँ बंद कर दिया गया है
