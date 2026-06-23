@@ -12,6 +12,8 @@ import SigninScreen from "./screens/Signinscreen";
 import {ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Shippingadressscreen from "./screens/Shippingadressscreen";
+import SignupScreen from "./screens/Signupscreen";
+import Paymentmethodscreen from "./screens/Paymentmethodscreen";
 function App() {
    const {state , dispatch : ctxdispatch} = useContext(Store); 
    const navigate = useNavigate();
@@ -64,8 +66,23 @@ function App() {
     ctxdispatch({type : 'SIGNOUT'});
     localStorage.removeItem('userInfo');
     localStorage.removeItem('shippingAddress');
+    localStorage.removeItem('paymentMethod');
     navigate('/');
   };
+
+  //signout ko yaha or store.js do jagah handle kyo kr rhe
+//   यूज़र ने क्लिक किया ➔ App.js में handleSignOut चला।
+
+// ब्राउज़र की सफ़ाई ➔ लोकल स्टोरेज से userInfo डिलीट हो गया।
+
+// स्टोर को सूचना ➔ dispatch के ज़रिए रिड्यूसर को 'SIGNOUT' बोला गया।
+
+// रिएक्ट की रैम साफ़ ➔ स्टेट में userInfo null हो गया, जिससे स्क्रीन बदल गई।
+
+// रीडायरेक्ट ➔ यूज़र को होमपेज पर भेज दिया गया।
+
+
+
   return (
     <div> 
      <div className="d-flex flex-column site-container">
@@ -125,7 +142,9 @@ function App() {
         <Route path="/" element={<Homescreen />} />
         <Route path="/cart" element={<CartScreen />} />
         <Route path="/signin" element={<SigninScreen />} />
+        <Route path="/signup" element={<SignupScreen />} />
         <Route path="/shipping" element={<Shippingadressscreen />} />
+        <Route path="/payment" element={<Paymentmethodscreen />} />
         <Route path="/product/:slug" element={<ProductScreen />} />  
       </Routes>
       </Container>

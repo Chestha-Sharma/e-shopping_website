@@ -130,6 +130,9 @@ const userInfoFromStorage = localStorage.getItem('userInfo')
 const initialState = {
   userInfo: userInfoFromStorage, 
   cart: { 
+    paymentMethod: localStorage.getItem('paymentMethod')
+      ? localStorage.getItem('paymentMethod')//did not used json parse bcz it is already a string
+      : '',
     shippingAddress: localStorage.getItem('shippingAddress')
       ? JSON.parse(localStorage.getItem('shippingAddress'))
       : {},
@@ -208,7 +211,9 @@ function reducer(state, action) {
       return { 
         ...state, 
         userInfo: null, 
-        cart: { ...state.cart, cartItems: guestCart,shippingAddress:{}} 
+        cart: { ...state.cart, cartItems: guestCart,
+                            shippingAddress:{},
+                             paymentMethod:''} 
       };
     }
     
@@ -220,6 +225,16 @@ function reducer(state, action) {
            shippingAddress: action.payload
          }
        }
+    };
+
+    case 'SAVE_PAYMENT_METHOD': {
+      return {
+        ...state,
+        cart:{
+          ...state.cart,
+          paymentMethod: action.payload
+        }
+      }
     };
     default:
       return state;

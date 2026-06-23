@@ -72,3 +72,7 @@ main{
   border-bottom : 0.2rem solid #f08000;
   color : #f08000;
 }
+
+.small-container{
+  max-width : 600px;
+}
