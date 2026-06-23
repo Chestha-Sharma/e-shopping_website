@@ -183,6 +183,13 @@ function reducer(state, action) {
       return { ...state, cart: { ...state.cart, cartItems } };
     }
     
+
+    case 'CART_CLEAR': {
+      localStorage.removeItem('cartItems');
+      return { ...state, cart: { ...state.cart, cartItems: [] } };
+    }
+
+
     case 'SIGNIN': {
       const user = action.payload;
       const cartKey = `cartItems_${user._id}`;
@@ -228,6 +235,7 @@ function reducer(state, action) {
     };
 
     case 'SAVE_PAYMENT_METHOD': {
+      localStorage.setItem('shippingAddress', JSON.stringify(action.payload));
       return {
         ...state,
         cart:{

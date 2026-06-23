@@ -124,6 +124,7 @@ import dotenv from 'dotenv';
 import seedRouter from './routes/seedrouter.js'; 
 import productRouter from './routes/productrouter.js';
 import userRouter from './routes/userrouter.js';
+import orderRouter from './routes/orderrouter.js';
 
 const app = express();
 
@@ -150,6 +151,7 @@ const PORT = process.env.PORT || 5000;
 app.use('/api/seed', seedRouter);
 app.use('/api/products', productRouter);
 app.use('/api/users', userRouter);  
+app.use('/api/orders', orderRouter);
 
 // 🚨 ग्लोबल एरर हैंडलिंग मिडिलवेयर (यह हमेशा सबसे आखरी में रहेगा!)
 app.use((err, req, res, next) => {
