@@ -101,13 +101,12 @@
 //   return <Store.Provider value={value}>{props.children}</Store.Provider>;
 // }
 
-
 import { createContext, useReducer } from 'react';
 import axios from 'axios';
 
 export const Store = createContext();
 
-// 🚀 डेटाबेस सिंक करने वाला फंक्शन (इसे रिड्यूसर के बाहर रखेंगे)
+// 🚀 डेटाबेस सिंक करने वाला फंक्शन
 const syncCartWithDB = async (userInfo, cartItems) => {
   if (userInfo && userInfo._id) {
     try {
@@ -131,6 +130,9 @@ const userInfoFromStorage = localStorage.getItem('userInfo')
 const initialState = {
   userInfo: userInfoFromStorage, 
   cart: { 
+    shippingAddress: localStorage.getItem('shippingAddress')
+      ? JSON.parse(localStorage.getItem('shippingAddress'))
+      : {},
     cartItems: userInfoFromStorage
       ? (localStorage.getItem(`cartItems_${userInfoFromStorage._id}`)
           ? JSON.parse(localStorage.getItem(`cartItems_${userInfoFromStorage._id}`))
@@ -159,7 +161,6 @@ function reducer(state, action) {
       const cartKey = userInfo ? `cartItems_${userInfo._id}` : 'cartItems_guest';
       localStorage.setItem(cartKey, JSON.stringify(cartItems));
       
-      // 🔥 यहाँ होगा मैजिक: डेटाबेस में सिंक करो
       syncCartWithDB(userInfo, cartItems);
       
       return { ...state, cart: { ...state.cart, cartItems } };
@@ -174,15 +175,17 @@ function reducer(state, action) {
       const cartKey = userInfo ? `cartItems_${userInfo._id}` : 'cartItems_guest'; 
       localStorage.setItem(cartKey, JSON.stringify(cartItems));
       
-      // 🔥 यहाँ भी मैजिक: डिलीट होने के बाद डेटाबेस में सिंक करो
       syncCartWithDB(userInfo, cartItems);
       
       return { ...state, cart: { ...state.cart, cartItems } };
     }
     
     case 'SIGNIN': {
-      const user = action.payload; // सुधारा: action.payload का यूज़ किया
+      const user = action.payload;
       const cartKey = `cartItems_${user._id}`;
+      
+      // ✅ बड़ा सुधार 1: लॉगिन होते ही यूजर की पूरी जन्मकुंडली (Token, Name आदि) को 'userInfo' की सही चाबी में लॉक करें
+      localStorage.setItem('userInfo', JSON.stringify(user));
       
       // लॉगिन होते ही डेटाबेस से आई कार्ट को लोकल स्टोरेज में लॉक कर दें
       localStorage.setItem(cartKey, JSON.stringify(user.cartItems || []));
@@ -195,6 +198,7 @@ function reducer(state, action) {
     }
     
     case 'SIGNOUT': {
+      // ✅ बड़ा सुधार 2: लॉगआउट होने पर 'userInfo' को साफ़ करें, न कि पुरानी/गलत 'user' चाबी को
       localStorage.removeItem('userInfo'); 
       
       const guestCart = localStorage.getItem('cartItems_guest')
@@ -204,10 +208,19 @@ function reducer(state, action) {
       return { 
         ...state, 
         userInfo: null, 
-        cart: { ...state.cart, cartItems: guestCart } 
+        cart: { ...state.cart, cartItems: guestCart,shippingAddress:{}} 
       };
     }
     
+    case 'SAVE_SHIPPING_ADDRESS': {
+       return {
+         ...state,
+         cart:{
+           ...state.cart,
+           shippingAddress: action.payload
+         }
+       }
+    };
     default:
       return state;
   }
@@ -217,4 +230,4 @@ export function StoreProvider(props) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const value = { state, dispatch };
   return <Store.Provider value={value}>{props.children}</Store.Provider>;
-} // ✅ सुधारा: मिसिंग ब्रैकेट यहाँ बंद कर दिया गया है
+}
