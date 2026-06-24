@@ -151,8 +151,10 @@ const PORT = process.env.PORT || 5000;
 app.use('/api/seed', seedRouter);
 app.use('/api/products', productRouter);
 app.use('/api/users', userRouter);  
-app.use('/api/orders', orderRouter);
-
+app.use('/api/order', orderRouter);
+app.get('/api/keys/paypal', (req, res) => {
+  res.send(process.env.PAYPAL_CLIENT_ID || 'sb');
+});
 // 🚨 ग्लोबल एरर हैंडलिंग मिडिलवेयर (यह हमेशा सबसे आखरी में रहेगा!)
 app.use((err, req, res, next) => {
    res.status(500).send({ message: err.message });   

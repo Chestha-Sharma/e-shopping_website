@@ -60,7 +60,7 @@ export default function Placeorderscreen() {
         try{
           console.log("User Info Status:", userInfo);
             dispatch({type:'CREATE_REQUEST'});
-            const {data} = await axios.post('/api/orders',{
+            const {data} = await axios.post('/api/order',{
                  orderItems : cart.cartItems,
                  shippingAddress : cart.shippingAddress,
                  paymentMethod : cart.paymentMethod,

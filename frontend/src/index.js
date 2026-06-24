@@ -7,6 +7,7 @@ import reportWebVitals from './reportWebVitals';
 import { HelmetProvider } from 'react-helmet-async';
 import { Store, StoreProvider } from './store';
 import { BrowserRouter } from 'react-router-dom';
+import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 {/*HelmetProvider uses for managing the document head in a React application. it allows you to manage the meta tags, title, and other elements in the document head. */}
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -14,7 +15,9 @@ root.render(
     <StoreProvider>
     <HelmetProvider>
       <BrowserRouter>
+      <PayPalScriptProvider deferLoading={true}>
       <App />
+      </PayPalScriptProvider>
       </BrowserRouter>
     </HelmetProvider>
      {/* React.StrictMode is a wrapper component that helps to identify potential problems in an application and provides warnings in the console during development. It does not affect the production build of the application. */}
