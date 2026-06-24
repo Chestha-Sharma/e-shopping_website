@@ -16,6 +16,7 @@ import SignupScreen from "./screens/Signupscreen";
 import Paymentmethodscreen from "./screens/Paymentmethodscreen";
 import Placeorderscreen from "./screens/Placeorderscreen";
 import Orderscreen from "./screens/Orderscreen";
+import Orderhistoryscreen from "./screens/Orderhistoryscreen";
 function App() {
    const {state , dispatch : ctxdispatch} = useContext(Store); 
    const navigate = useNavigate();
@@ -90,13 +91,15 @@ function App() {
      <div className="d-flex flex-column site-container">
       <ToastContainer position="bottom-center" limit={1}/>
       <header>
-        <Navbar bg="dark" variant="dark">
+        <Navbar bg="dark" variant="dark" expand="lg"> 
           <Container>
             <LinkContainer to="/">
             <Navbar.Brand href="#home">Amaozona</Navbar.Brand>
             {/* amazona is a brand link and navbar.brand use for it */}
             </LinkContainer>
-            <Nav className="me-auto">
+            <Navbar.Toggle aria-controls="basic-navbar-nav" />
+            <Navbar.Collapse id="basic-navbar-nav"> 
+            <Nav className="me-auto w-100 justify-content-end">
               <Link to="/cart" className="nav-link">
               Cart
               {cart.cartItems.length > 0 && (
@@ -130,7 +133,8 @@ function App() {
                 Sign In
                 </Link>
               )}
-            </Nav>
+            </Nav> 
+            </Navbar.Collapse>
           </Container>
         </Navbar>
 
@@ -148,7 +152,8 @@ function App() {
         <Route path="/shipping" element={<Shippingadressscreen />} />
         <Route path="/payment" element={<Paymentmethodscreen />} />
         <Route path="/placeorder" element={<Placeorderscreen />} />
-        <Route path="/order/:id" element={<Orderscreen />} />
+        <Route path="/order/:id" element={<Orderscreen />} /> 
+        <Route path="/orderhistory" element={<Orderhistoryscreen />} />
         <Route path="/product/:slug" element={<ProductScreen />} />  
       </Routes>
       </Container>

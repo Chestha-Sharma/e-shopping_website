@@ -27,8 +27,16 @@ orderRouter.post('/',isAuth, //isAuth is a middleware function responsiblr for c
         const createdOrder = await neworder.save();
         res.status(201).send({ message: 'new Order created successfully', order: createdOrder });
         })
-    );
-
+    );  //ek baat or dhyan rakhna ye sab sequemce me h /mine /:id se pahle aaya h agar baad me likh diya to :id /mine ko handle krega
+    orderRouter.get('/mine',isAuth,  
+        expressAsyncHandler(async (req, res) => {
+        const order = await Order.find({user:req.user._id});
+        if (!order) {
+            return res.status(404).send({ message: 'Order not found' });
+        }
+        res.status(200).send({ message: 'Order found', order });
+    })
+);
    orderRouter.get('/:id',isAuth,  
         expressAsyncHandler(async (req, res) => {
         const order = await Order.findById(req.params.id);
