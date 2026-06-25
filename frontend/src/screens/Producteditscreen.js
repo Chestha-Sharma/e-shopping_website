@@ -22,10 +22,29 @@ const reducer = (state, action) => {
       return { ...state, loadingUpdate: false };
     case 'UPDATE_FAIL':
       return { ...state, loadingUpdate: false , error: action.payload };
+      case 'UPLOAD_REQUEST':
+      return { ...state, loadingUpload: true, errorUpload: '' };
+    case 'UPLOAD_SUCCESS':
+      return {
+        ...state,
+        loadingUpload: false,
+        errorUpload: '',
+      };
+    case 'UPLOAD_FAIL':
+      return { ...state, loadingUpload: false, errorUpload: action.payload };
     default:
       return state;
   }
 }
+
+
+
+
+
+
+
+
+
 export default function Producteditscreen() {
     const navigate = useNavigate();
 
@@ -34,7 +53,7 @@ export default function Producteditscreen() {
 
    const { state } = useContext(Store);
    const { userInfo } = state;
-   const [{ loading, error ,loadingUpdate}, dispatch] = useReducer(reducer, {
+   const [{ loading, error ,loadingUpdate , loadingUpload}, dispatch] = useReducer(reducer, {
      loading: true,
      error: ''
    });
@@ -49,7 +68,7 @@ export default function Producteditscreen() {
     const [category , setCategory] = useState('');
     const [image , setImage] = useState('');
 
-
+   
     useEffect(()=>{
         const fetchProduct = async ()=>{
         try{
@@ -73,6 +92,27 @@ export default function Producteditscreen() {
     }
     fetchProduct();
     },[productId]);
+   const uploadfileHandler = async (e) => {
+    const file = e.target.files[0];
+    const bodyFormData = new FormData();
+    bodyFormData.append('file', file);
+    try {
+      dispatch({ type: 'UPLOAD_REQUEST' });
+      const { data } = await axios.post('/api/upload', bodyFormData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          authorization: `Bearer ${userInfo.token}`,
+        },
+      });
+      dispatch({ type: 'UPLOAD_SUCCESS' });
+      setImage(data.secure_url);
+      toast.success('Image Uploaded Successfully'); 
+    } catch (error) {
+        toast.error(geterror(error));
+      dispatch({ type: 'UPLOAD_FAIL', payload: geterror(error) });
+    }
+}
+
 
 
     const submitHandler =  async (e) =>{
@@ -152,6 +192,14 @@ export default function Producteditscreen() {
               required
             />
           </Form.Group>
+          <Form.Group className="mb-3" controlId="imagefile">
+            <Form.Label>Upload Image</Form.Label>
+            <Form.Control
+              type="file"
+              onChange={uploadfileHandler} 
+              />
+              {loadingUpload && <Loading></Loading>}
+          </Form.Group>
           <Form.Group className="mb-3" controlId="category">
             <Form.Label>Category</Form.Label>
             <Form.Control
@@ -173,6 +221,14 @@ export default function Producteditscreen() {
             <Form.Control
               value={countInStock}
               onChange={(e) => setCountInStock(e.target.value)}
+              required
+            />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="rating">
+            <Form.Label>Rating</Form.Label>
+            <Form.Control
+              value={rating}
+              onChange={(e) => setRating(e.target.value)}
               required
             />
           </Form.Group>

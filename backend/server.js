@@ -124,7 +124,7 @@ import seedRouter from './routes/seedrouter.js';
 import productRouter from './routes/productrouter.js';
 import userRouter from './routes/userrouter.js';
 import orderRouter from './routes/orderrouter.js';
-
+import uploadRouter from './routes/uploadrouter.js';
 const app = express();
 
 //  मिडिलवेयर्स (Body Parsers)
@@ -151,6 +151,7 @@ app.use('/api/seed', seedRouter);
 app.use('/api/products', productRouter);
 app.use('/api/users', userRouter);  
 app.use('/api/order', orderRouter);
+app.use('/api/upload', uploadRouter);
 app.get('/api/keys/paypal', (req, res) => {
   res.send(process.env.PAYPAL_CLIENT_ID || 'sb');
 });  

@@ -28,20 +28,36 @@ const reducer = (state, action) => {
           };
         case 'CREATE_FAIL':
           return { ...state, loadingCreate: false };
+          case 'DELETE_REQUEST':
+      return { ...state, loadingDelete: true, successDelete: false };
+    case 'DELETE_SUCCESS':
+      return {
+        ...state,
+        loadingDelete: false,
+        successDelete: true,
+      };
+    case 'DELETE_FAIL':
+      return { ...state, loadingDelete: false, successDelete: false };
+
+    case 'DELETE_RESET':
+      return { ...state, loadingDelete: false, successDelete: false };
         default:
             return state;
     }
 }
 export default function Productlistscreen() {
 
-    const [{ loading, error, products, countProducts, page, pages ,loadingCreate }, dispatch] = useReducer(reducer, {
+    const [{ loading, error, products, countProducts, page, pages ,loadingCreate , loadingDelete , successDelete }, dispatch] = useReducer(reducer, {
         loading: true,
         error: '',
         products: [],
         countProducts: 0,
         page: 1,
         pages: 0,
-        loadingCreate: false
+        loadingCreate: false,
+        loadingCreate: false,
+        loadingDelete: false,  
+        successDelete: false,   
     });
 
 //     {
@@ -74,6 +90,9 @@ export default function Productlistscreen() {
                 }
               });
               dispatch({type : 'FETCH_SUCCESS' , payload : data});
+              if(successDelete){
+                dispatch({type : 'DELETE_RESET'});
+              }
             }
             catch(err){
                
@@ -81,7 +100,7 @@ export default function Productlistscreen() {
         }
   
         fetchData();
-     },[userInfo,filterpage]);
+     },[userInfo,filterpage,successDelete]);
 
     const createHandle = async ()=>{
        
@@ -94,13 +113,32 @@ export default function Productlistscreen() {
             });
             toast.success('Product Created Successfully');
             dispatch({type : 'CREATE_SUCCESS'});
-            navigate(`/admin/products/${data.product._id}`);
+            navigate(`/admin/products`);
         }
         catch(err){
             toast.error(geterror(err));
             dispatch({ type: 'FETCH_FAIL', payload: geterror(err) });
         }
 
+    }
+
+    const deleteHandler = async (product) => {
+       if(window.confirm('Are you sure you want to delete this product?')){
+        try{
+            dispatch({type : 'DELETE_REQUEST'});
+           await axios.delete(`/api/products/${product._id}`,{
+               headers:{
+                   authorization : `Bearer ${userInfo.token}`
+               }
+           });
+           toast.success('Product Deleted Successfully');
+           dispatch({ type: 'DELETE_SUCCESS' }); 
+        }
+        catch(err){
+            toast.error(geterror(err));
+            dispatch({ type: 'DELETE_FAIL', payload: geterror(err) });
+        }
+       }
     }
 
   return (
@@ -119,6 +157,7 @@ export default function Productlistscreen() {
         </Col>
       </Row>
       {loadingCreate && <Loading />}
+      {loadingDelete && <Loading />}
       {
         loading ?
         <Loading />
@@ -152,6 +191,14 @@ export default function Productlistscreen() {
                     onClick={()=>navigate(`/admin/product/${product._id}`)}
                     >
                       Edit
+                    </Button>
+                    &nbsp;
+                    <Button
+                      type="button"
+                      variant="light"
+                      onClick={() => deleteHandler(product)}
+                    >
+                      Delete
                     </Button>
                   </td>
                 </tr>
