@@ -46,7 +46,7 @@ main{
 .rating span{
   color : #ffc000;
 }
-.btn-primary{
+.btn-primary , .btn-outline-primary{
   background-color : #f0c040;
   color : black;
   border : none;
@@ -75,4 +75,35 @@ main{
 
 .small-container{
   max-width : 600px;
+}
+
+
+.navbar-brand{
+  font-weight : bold;
+}
+.site-navbar{
+  width : 240px;
+  height : 100%;
+  position : absolute;
+  left : -300px;
+  transition : 0.5s;
+  background-color : #100901;
+}
+.site-container{
+  transition : 0.4s;
+}
+.active-cont{
+  margin-left : 240px;
+}
+
+.active-nav{
+  left:0;
+}
+
+.text-bold{
+  font-weight:bold;
+}
+
+.text-decoration-none{
+  text-decoration:none;
 }

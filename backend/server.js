@@ -119,8 +119,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-
-// 🚀 सभी रूट्स का इम्पोर्ट
+import path from 'path';
 import seedRouter from './routes/seedrouter.js'; 
 import productRouter from './routes/productrouter.js';
 import userRouter from './routes/userrouter.js';
@@ -128,14 +127,14 @@ import orderRouter from './routes/orderrouter.js';
 
 const app = express();
 
-// 🛠️ मिडिलवेयर्स (Body Parsers)
+//  मिडिलवेयर्स (Body Parsers)
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
 
-// 🔑 एनवायरनमेंट वेरिएबल्स लोड करना
+// एनवायरनमेंट वेरिएबल्स लोड करना
 dotenv.config(); 
 
-// 🌐 डेटाबेस कनेक्शन (MongoDB Atlas)
+// डेटाबेस कनेक्शन (MongoDB Atlas)
 const connectdb = async () => {
   try {
     await mongoose.connect(process.env.MONGODB_URI);
@@ -154,8 +153,7 @@ app.use('/api/users', userRouter);
 app.use('/api/order', orderRouter);
 app.get('/api/keys/paypal', (req, res) => {
   res.send(process.env.PAYPAL_CLIENT_ID || 'sb');
-});
-// 🚨 ग्लोबल एरर हैंडलिंग मिडिलवेयर (यह हमेशा सबसे आखरी में रहेगा!)
+});  
 app.use((err, req, res, next) => {
    res.status(500).send({ message: err.message });   
 });

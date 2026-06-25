@@ -3,13 +3,13 @@
 import { BrowserRouter ,Route,Routes ,Link, useNavigate } from "react-router-dom";
 import Homescreen from "./screens/Homescreen";
 import ProductScreen from "./screens/Productscreen";
-import { Badge, Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
+import { Badge, Button, Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Store } from "./store";
 import CartScreen from "./screens/Cartscreen"; 
 import SigninScreen from "./screens/Signinscreen";
-import {ToastContainer} from 'react-toastify';
+import {toast, ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Shippingadressscreen from "./screens/Shippingadressscreen";
 import SignupScreen from "./screens/Signupscreen";
@@ -17,6 +17,11 @@ import Paymentmethodscreen from "./screens/Paymentmethodscreen";
 import Placeorderscreen from "./screens/Placeorderscreen";
 import Orderscreen from "./screens/Orderscreen";
 import Orderhistoryscreen from "./screens/Orderhistoryscreen";
+import Profilescreen from "./screens/Profilescreen";
+import { geterror } from "./util";
+import axios from "axios";
+import Searchbox from "./components/Searchbox";
+import Searchscreen from "./screens/Searchscreen";
 function App() {
    const {state , dispatch : ctxdispatch} = useContext(Store); 
    const navigate = useNavigate();
@@ -70,7 +75,7 @@ function App() {
     localStorage.removeItem('userInfo');
     localStorage.removeItem('shippingAddress');
     localStorage.removeItem('paymentMethod');
-    navigate('/');
+    navigate('/signin');
   };
 
   //signout ko yaha or store.js do jagah handle kyo kr rhe
@@ -84,21 +89,44 @@ function App() {
 
 // रीडायरेक्ट ➔ यूज़र को होमपेज पर भेज दिया गया।
 
-
-
+ const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
+ const [categories, setCategories] = useState([]);
+ useEffect(()=>{
+   const fetchCategories = async ()=>{
+    try{
+     const {data} = await axios.get('/api/products/categories');
+     setCategories(data);
+     setCategories(data);
+    }
+    catch(error){
+       toast.error(geterror(error));
+    }
+   }
+   fetchCategories();
+ }, []);
   return (
     <div> 
-     <div className="d-flex flex-column site-container">
+     <div className={sidebarIsOpen?
+     "d-flex flex-column site-container active-cont"
+      :"d-flex flex-column site-container"
+      }>
       <ToastContainer position="bottom-center" limit={1}/>
       <header>
         <Navbar bg="dark" variant="dark" expand="lg"> 
           <Container>
+            <Button
+            variant="dark"
+            onClick={()=>setSidebarIsOpen(!sidebarIsOpen)}
+            >
+              <i className="fas fa-bars"></i>
+            </Button>
             <LinkContainer to="/">
             <Navbar.Brand href="#home">Amaozona</Navbar.Brand>
             {/* amazona is a brand link and navbar.brand use for it */}
             </LinkContainer>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav"> 
+              <Searchbox />
             <Nav className="me-auto w-100 justify-content-end">
               <Link to="/cart" className="nav-link">
               Cart
@@ -142,13 +170,37 @@ function App() {
       {/* <Link to="/">amaozona</Link>  */}
       {/* a ki jagah Link use kiya page refresh na ho or good responsiveness mile user ko ,single page website bane */}
       </header>
+      <div className={sidebarIsOpen?
+        "site-navbar active-nav d-flex justify-content-between flex-column flex-wrap"
+        :"site-navbar d-flex justify-content-between flex-column flex-wrap"}>
+          <Nav className="flex-column text-white w-100 p-2">
+            <Nav.Item>
+              <strong>Categories</strong>
+              {
+              categories.map((category) => (
+                 <Nav.Item key={category}>
+                   <Nav.Link
+                     as={Link}
+                     to={`/search?category=${category}&query=all&price=all&rating=all&order=newest&page=1`}
+                     onClick={() => setSidebarIsOpen(false)}
+                   >
+                     {category}
+                   </Nav.Link>
+                 </Nav.Item>
+               ))
+               }
+            </Nav.Item>
+          </Nav>
+      </div>
      <main>
       <Container className="mt-3">
       <Routes>
         <Route path="/" element={<Homescreen />} />
         <Route path="/cart" element={<CartScreen />} />
+        <Route path="/search" element={<Searchscreen />} />
         <Route path="/signin" element={<SigninScreen />} />
         <Route path="/signup" element={<SignupScreen />} />
+        <Route path="/profile" element={<Profilescreen />} />
         <Route path="/shipping" element={<Shippingadressscreen />} />
         <Route path="/payment" element={<Paymentmethodscreen />} />
         <Route path="/placeorder" element={<Placeorderscreen />} />
