@@ -25,6 +25,7 @@ import Searchscreen from "./screens/Searchscreen";
 import Protectedrouter from "./components/Protectedrouter";
 import Adminroute from "./components/Adminroute";
 import Dashboardscreen from "./screens/Dashboardscreen";
+import Productlistscreen from "./screens/Productlistscreen";
 function App() {
    const {state , dispatch : ctxdispatch} = useContext(Store); 
    const navigate = useNavigate();
@@ -172,17 +173,17 @@ function App() {
                         Dashboard
                       </NavDropdown.Item>
                     </LinkContainer>
-                    <LinkContainer to="/admin/productlist">
+                    <LinkContainer to="/admin/products">
                       <NavDropdown.Item>
                         Products
                       </NavDropdown.Item>
                     </LinkContainer>
-                    <LinkContainer to="/admin/orderlist">
+                    <LinkContainer to="/admin/orders">
                       <NavDropdown.Item>
                         Orders
                       </NavDropdown.Item>
                     </LinkContainer>
-                    <LinkContainer to="/admin/userlist"> 
+                    <LinkContainer to="/admin/users"> 
                       <NavDropdown.Item>
                         Users 
                       </NavDropdown.Item>
@@ -254,6 +255,13 @@ function App() {
           </Adminroute>
           }  
            />
+         <Route path="/admin/products" element={
+          <Adminroute>
+            <Productlistscreen />
+          </Adminroute>
+          }  
+           />
+
         <Route path="/" element={<Homescreen />} />
       </Routes>
       </Container>

@@ -1,14 +1,44 @@
 import express from 'express';
 import Product from '../models/productmodel.js';
 import expressAsyncHandler from 'express-async-handler';
-
+import { isAuth , isAdmin } from '../utils.js';
 const productRouter = express.Router();
 productRouter.get('/', async (req, res) => {
   const products = await Product.find();
   res.send(products);
 });
 
+
+
 const PAGE_SIZE = 3;
+
+
+productRouter.get('/admin' , isAuth ,isAdmin, expressAsyncHandler (async (req, res) => {
+       const { query } = req;
+       const page = query.page || 1;
+       const pageSize = query.pageSize || PAGE_SIZE;
+
+
+       const products = await Product.find({}).skip(pageSize * (page - 1)).limit(pageSize);
+//        1. .limit(pageSize) क्या करेगा?
+// यह तय करता है कि एक बार में डेटाबेस से अधिकतम (Maximum) कितने प्रोडक्ट्स बाहर निकालने हैं।
+
+// अगर आपके pageSize की वैल्यू 3 है, तो इसका मतलब है कि एक पन्ने पर सिर्फ 3 प्रोडक्ट्स ही दिखाई देंगे, चाहे डेटाबेस में 100 प्रोडक्ट्स क्यों न हों।
+
+// 2. .skip(pageSize * (page - 1)) क्या करेगा?
+// यह तय करता है कि नया डेटा दिखाने से पहले शुरुआत के कितने प्रोडक्ट्स को छोड़कर (Skip करके) आगे बढ़ना है। यह सीधे आपकी करंट page वैल्यू पर निर्भर करता है।
+
+// आइए गणित (Math) लगाकर देखते हैं कि अलग-अलग पेजेस पर यह कैसे काम करेगा (मान लेते हैं कि pageSize = 3 है):
+
+const countProducts = await Product.countDocuments();
+// Product.find().skip().limit() $\rightarrow$ स्क्रीन पर दिखाने के लिए सिर्फ 3 प्रोडक्ट्स ढूंढकर लाता है।Product.countDocuments() $\rightarrow$ डेटाबेस में रखे सारे प्रोडक्ट्स को गिनता है ताकि नीचे पेजिनेशन के बटन्स की सही संख्या तय की जा सके।
+   res.send({
+     products,
+     countProducts,
+     page,
+     pages: Math.ceil(countProducts / pageSize),
+   });
+}));
 productRouter.get('/search', expressAsyncHandler (async (req, res) => {
   const { query } = req;
     const pageSize = query.pageSize || PAGE_SIZE;
