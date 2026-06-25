@@ -27,6 +27,7 @@ import Adminroute from "./components/Adminroute";
 import Dashboardscreen from "./screens/Dashboardscreen";
 import Productlistscreen from "./screens/Productlistscreen";
 import Producteditscreen from "./screens/Producteditscreen";
+import Orderlistscreen from "./screens/Orderlistscreen";
 function App() {
    const {state , dispatch : ctxdispatch} = useContext(Store); 
    const navigate = useNavigate();
@@ -268,6 +269,12 @@ function App() {
             </Adminroute>
             }
             />
+            <Route path="/admin/orders" element={
+            <Adminroute>
+              <Orderlistscreen />
+            </Adminroute>
+            }
+            /> 
         <Route path="/" element={<Homescreen />} />
       </Routes>
       </Container>

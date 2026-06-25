@@ -5,6 +5,32 @@ import User from '../models/usermodel.js';
 import { isAuth ,isAdmin } from '../utils.js';
 import Product from '../models/productmodel.js';
 const orderRouter = express.Router();
+
+
+orderRouter.get('/',isAuth,isAdmin,
+expressAsyncHandler(async (req,res)=>{
+    const orders = await Order.find().populate('user','name');
+    res.send(orders);
+}));
+
+// Order.find() का काम
+// यह डेटाबेस के orders कलेक्शन में जाता है और वहाँ रखे प्रत्येक ऑर्डर का पूरा डॉक्यूमेंट उठाता है। इस डॉक्यूमेंट के अंदर ऑर्डर से जुड़ी हर जानकारी पहले से मौजूद होती है, जैसे:
+
+// _id (ऑर्डर की अपनी यूनिक आईडी)
+
+// totalPrice (कुल कीमत)
+
+// isPaid (पेमेंट स्टेटस)
+
+// createdAt (ऑर्डर का समय)
+
+// user (वह फील्ड जिसमें उस ऑर्डर को करने वाले यूजर की MongoDB ObjectId स्टोर होती है)
+
+// 2. .populate('user', 'name') का काम
+// यह केवल user नामक फील्ड पर अपना जादू चलाता है। यह मोंगूज से कहता है: "इस ऑर्डर में जो user की आईडी लिखी है, उसे हटाकर उसकी जगह users कलेक्शन से उस यूजर का पूरा ऑब्जेक्ट ले आओ, लेकिन उस ऑब्जेक्ट के अंदर से हमें सिर्फ name प्रॉपर्टी ही देना।"
+
+
+
  
 orderRouter.post('/',isAuth, //isAuth is a middleware function responsiblr for checking user is logged in or not
     expressAsyncHandler(async (req, res) => {
