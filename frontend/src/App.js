@@ -22,6 +22,8 @@ import { geterror } from "./util";
 import axios from "axios";
 import Searchbox from "./components/Searchbox";
 import Searchscreen from "./screens/Searchscreen";
+import Protectedrouter from "./components/Protectedrouter";
+import Adminroute from "./components/Adminroute";
 function App() {
    const {state , dispatch : ctxdispatch} = useContext(Store); 
    const navigate = useNavigate();
@@ -161,6 +163,32 @@ function App() {
                 Sign In
                 </Link>
               )}
+              {
+                userInfo && userInfo.isAdmin ? (
+                  <NavDropdown title="Admin" id="admin-nav-dropdown">
+                    <LinkContainer to="/admin/dashboard">
+                      <NavDropdown.Item>
+                        Dashboard
+                      </NavDropdown.Item>
+                    </LinkContainer>
+                    <LinkContainer to="/admin/productlist">
+                      <NavDropdown.Item>
+                        Products
+                      </NavDropdown.Item>
+                    </LinkContainer>
+                    <LinkContainer to="/admin/orderlist">
+                      <NavDropdown.Item>
+                        Orders
+                      </NavDropdown.Item>
+                    </LinkContainer>
+                    <LinkContainer to="/admin/userlist"> 
+                      <NavDropdown.Item>
+                        Users 
+                      </NavDropdown.Item>
+                    </LinkContainer>
+                  </NavDropdown>
+                ) : null
+              }
             </Nav> 
             </Navbar.Collapse>
           </Container>
@@ -195,18 +223,37 @@ function App() {
      <main>
       <Container className="mt-3">
       <Routes>
-        <Route path="/" element={<Homescreen />} />
         <Route path="/cart" element={<CartScreen />} />
         <Route path="/search" element={<Searchscreen />} />
         <Route path="/signin" element={<SigninScreen />} />
         <Route path="/signup" element={<SignupScreen />} />
-        <Route path="/profile" element={<Profilescreen />} />
+        <Route path="/profile" element={
+          <Protectedrouter>
+          < Profilescreen />
+          </Protectedrouter>
+          } />
         <Route path="/shipping" element={<Shippingadressscreen />} />
         <Route path="/payment" element={<Paymentmethodscreen />} />
         <Route path="/placeorder" element={<Placeorderscreen />} />
-        <Route path="/order/:id" element={<Orderscreen />} /> 
-        <Route path="/orderhistory" element={<Orderhistoryscreen />} />
+        <Route path="/order/:id" element={
+          <Protectedrouter>
+          <Orderscreen />
+          </Protectedrouter>
+        }  /> 
+        <Route path="/orderhistory" element={
+          <Protectedrouter>
+          <Orderhistoryscreen />
+          </Protectedrouter>
+          } />
         <Route path="/product/:slug" element={<ProductScreen />} />  
+         {/* Rotes for admin */}
+         <Route path="/admin/dashboard" element={
+          <Adminroute>
+            <Dashboardscreen />
+          </Adminroute>
+          }  
+           />
+        <Route path="/" element={<Homescreen />} />
       </Routes>
       </Container>
      </main>
