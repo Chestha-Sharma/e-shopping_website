@@ -6,7 +6,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { geterror } from '../util';
 import axios from 'axios';
 import { Helmet } from 'react-helmet-async';
-import { Card, Col, ListGroup, Row } from 'react-bootstrap';
+import { Button, Card, Col, ListGroup, Row } from 'react-bootstrap';
 import { Store } from '../store';
 import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
 import { toast } from 'react-toastify';
@@ -27,6 +27,18 @@ function reducer(state, action) {
             return { ...state, loadingPay: false, errorPay: action.payload };
         case 'PAY_RESET':
             return { ...state, loadingPay: false, successPay: false };
+            case 'DELIVER_REQUEST':
+                 return { ...state, loadingDeliver: true };
+             case 'DELIVER_SUCCESS':
+               return { ...state, loadingDeliver: false, successDeliver: true };
+             case 'DELIVER_FAIL':
+               return { ...state, loadingDeliver: false };
+             case 'DELIVER_RESET':
+               return {
+        ...state,
+        loadingDeliver: false,
+        successDeliver: false,
+      };
         default:
             return state;
     }
@@ -39,13 +51,15 @@ export default function Orderscreen() {
     const { id: orderId } = params;
     const navigate = useNavigate();
 
-    const [{ loading, error, order, successPay, loadingPay }, dispatch] = useReducer(reducer, {
+    const [{ loading, error, order, successPay, loadingPay , successDeliver , loadingDeliver }, dispatch] = useReducer(reducer, {
         loading: true,
         error: '',
         order: {},
         successPay: false,
         loadingPay: false,
-        errorPay: ''
+        errorPay: '',
+        successDeliver: false,
+        loadingDeliver: false
     });
     
     const [{ isPending }, Paypaldispatch] = usePayPalScriptReducer();
@@ -104,10 +118,13 @@ export default function Orderscreen() {
             return navigate('/signin'); 
         }
 
-        if (!order._id || successPay || (order._id !== orderId)) {
+        if (!order._id || successPay || successDeliver || (order._id !== orderId)) {
             fetchOrder();
             if (successPay) {
                 dispatch({ type: 'PAY_RESET' });
+            }
+            if (successDeliver) {
+                dispatch({ type: 'DELIVER_RESET' });
             }
         } else {
             const loadPaypalScript = async () => {
@@ -134,7 +151,25 @@ export default function Orderscreen() {
             };
             loadPaypalScript();
         }
-    }, [orderId, userInfo, order, navigate, Paypaldispatch, successPay]);
+    }, [orderId, userInfo, order, navigate, Paypaldispatch, successPay , successDeliver]);
+
+
+    async function deliverorderHandler(){
+        try{
+            dispatch({ type: 'DELIVER_REQUEST' });
+            const {data} = await axios.put(`/api/order/${orderId}/deliver`,{}, {
+                // वह खाली ऑब्जेक्ट {} रिक्वेस्ट बॉडी (Request Body) के लिए है।जब आप axios.put या axios.post का इस्तेमाल करते हैं, तो सिंटैक्स का नियम (Structure) कुछ इस तरह होता है:$$\text{axios.put}(\text{url}, \text{data}, \text{config})$$
+                headers: {
+                    authorization: `Bearer ${userInfo.token}`
+                }
+            });
+            dispatch({ type: 'DELIVER_SUCCESS' });
+        }
+        catch(error){
+            toast.error(geterror(error));
+            dispatch({ type: 'DELIVER_FAIL', payload: geterror(error) });
+        }
+    }
 
     return loading ? (
         <Loading />
@@ -251,6 +286,20 @@ export default function Orderscreen() {
                                         {loadingPay && <Loading />}
                                     </ListGroup.Item>
                                 )}
+                                {
+                                    userInfo.isAdmin && order.isPaid && !order.isDelivered && (
+                                        <ListGroup.Item>
+                                            {
+                                                loadingDeliver && <Loading /> 
+                                            }
+                                            <div className='d-grid'>
+                                                <Button type='button' onClick={deliverorderHandler}>
+                                                    Deliver Order
+                                                </Button>
+                                            </div>
+                                        </ListGroup.Item>
+                                    )
+                                }
                             </ListGroup>
                         </Card.Body>
                     </Card>

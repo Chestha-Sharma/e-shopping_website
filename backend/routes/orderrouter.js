@@ -152,6 +152,20 @@ orderRouter.post('/',isAuth, //isAuth is a middleware function responsiblr for c
     })
 );
 
+orderRouter.put('/:id/deliver',isAuth,
+    expressAsyncHandler(async (req, res) => {
+        const order = await Order.findById(req.params.id);
+        if (!order) {
+            return res.status(404).send({ message: 'Order not found' });
+        }
+        order.isDelivered = true;
+        order.deliveredAt = Date.now();
+        const updatedOrder = await order.save();
+        res.status(200).send({ message: 'Order delivered successfully', order: updatedOrder });
+    })
+);
+
+
 
 orderRouter.put('/:id/pay',isAuth,
     expressAsyncHandler(async (req, res) => {
