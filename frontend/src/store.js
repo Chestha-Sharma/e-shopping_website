@@ -185,16 +185,17 @@ function reducer(state, action) {
     
 
     case 'CART_CLEAR': {
-      localStorage.removeItem('cartItems');
-      return { ...state, cart: { ...state.cart, cartItems: [] } };
-    }
-
+  const { userInfo } = state;
+  const cartKey = userInfo ? `cartItems_${userInfo._id}` : 'cartItems_guest';
+  localStorage.removeItem(cartKey); // ← sahi key
+  return { ...state, cart: { ...state.cart, cartItems: [] } };
+     }
 
     case 'SIGNIN': {
       const user = action.payload;
       const cartKey = `cartItems_${user._id}`;
       
-      // ✅ बड़ा सुधार 1: लॉगिन होते ही यूजर की पूरी जन्मकुंडली (Token, Name आदि) को 'userInfo' की सही चाबी में लॉक करें
+      //  लॉगिन होते ही यूजर की पूरी जन्मकुंडली (Token, Name आदि) को 'userInfo' की सही चाबी में लॉक करें
       localStorage.setItem('userInfo', JSON.stringify(user));
       
       // लॉगिन होते ही डेटाबेस से आई कार्ट को लोकल स्टोरेज में लॉक कर दें
@@ -208,7 +209,7 @@ function reducer(state, action) {
     }
     
     case 'SIGNOUT': {
-      // ✅ बड़ा सुधार 2: लॉगआउट होने पर 'userInfo' को साफ़ करें, न कि पुरानी/गलत 'user' चाबी को
+      //लॉगआउट होने पर 'userInfo' को साफ़ करें, न कि पुरानी/गलत 'user' चाबी को
       localStorage.removeItem('userInfo'); 
       
       const guestCart = localStorage.getItem('cartItems_guest')
@@ -234,16 +235,18 @@ function reducer(state, action) {
        }
     };
 
-    case 'SAVE_PAYMENT_METHOD': {
-      localStorage.setItem('shippingAddress', JSON.stringify(action.payload));
-      return {
-        ...state,
-        cart:{
-          ...state.cart,
-          paymentMethod: action.payload
-        }
-      }
-    };
+     case 'SAVE_PAYMENT_METHOD': {
+  localStorage.setItem('paymentMethod', action.payload); // ← sahi key, JSON.stringify bhi nahi chahiye (string hai)
+  return {
+    ...state,
+    cart: {
+      ...state.cart,
+      paymentMethod: action.payload
+    }
+  }
+};
+
+
     default:
       return state;
   }

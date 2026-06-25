@@ -2,7 +2,8 @@ import expressAsyncHandler from 'express-async-handler';
 import express from 'express'; 
 import Order from '../models/ordermodel.js';
 import User from '../models/usermodel.js';
-import { isAuth } from '../utils.js';
+import { isAuth ,isAdmin } from '../utils.js';
+import Product from '../models/productmodel.js';
 const orderRouter = express.Router();
  
 orderRouter.post('/',isAuth, //isAuth is a middleware function responsiblr for checking user is logged in or not
@@ -28,6 +29,84 @@ orderRouter.post('/',isAuth, //isAuth is a middleware function responsiblr for c
         res.status(201).send({ message: 'new Order created successfully', order: createdOrder });
         })
     );  //ek baat or dhyan rakhna ye sab sequemce me h /mine /:id se pahle aaya h agar baad me likh diya to :id /mine ko handle krega
+
+   
+//     User.aggregate() MongoDB और Mongoose का एक बहुत ही शक्तिशाली (powerful) फीचर है। इसका उपयोग तब किया जाता है जब आपको डेटाबेस से केवल सीधा डेटा ढूंढकर (जैसे find() से) नहीं निकालना हो, बल्कि उस डेटा पर Calculations, Grouping, Filtering, या Transformation करना हो।
+
+// इसे MongoDB का "Data Processing Factory" या "Pipeline" कहा जाता है।
+
+// इसे एक आसान उदाहरण से समझें (Real-life Analogy)
+// मान लीजिए आपके पास एक User कलेक्शन है जिसमें सैकड़ों यूज़र्स का डेटा है।
+
+// User.find() का काम सिर्फ इतना है: "सारे यूज़र्स की लिस्ट लाकर दे दो।"
+
+// User.aggregate() का काम तब शुरू होता है जब आप कहें: "मुझे शहर (City) के हिसाब से यूज़र्स को Group करो, फिर गिनकर बताओ कि हर शहर में Total कितने यूज़र्स हैं, और सिर्फ उन्हीं शहरों को दिखाओ जहाँ 10 से ज़्यादा यूज़र्स रहते हैं।"
+
+// यह काम कैसे करता है? (The Pipeline Concept)
+// aggregate() एक Pipeline Array [] लेता है। इस एरे के अंदर अलग-अलग स्टेजेस (Stages) होती हैं। डेटा पहली स्टेज से गुज़रकर दूसरी स्टेज में जाता है, फिर तीसरी में—बिलकुल एक फैक्ट्री की असेंबली लाइन की तरह।
+
+// मुख्य Stages:
+
+// $match: डेटा को फ़िल्टर करता है (जैसे find काम करता है)।
+
+// $group: डेटा को किसी एक फील्ड के आधार पर इकट्ठा करता है और उसपर गणना (Sum, Average, Count) करता है।
+
+// $sort: रिज़ल्ट को एसेंडिंग या डिसेंडिंग ऑर्डर में सेट करता है।
+
+// $project: तय करता है कि फाइनल रिज़ल्ट में कौन-सी फील्ड्स दिखानी हैं और कौन-सी छिपानी हैं।
+
+
+
+    orderRouter.get(
+   '/summary',isAuth,isAdmin,
+   expressAsyncHandler( async (req,res)=>{
+         const orders = await Order.aggregate([
+            {
+                $group:{
+                    _id:null,
+                    numOrders:{$sum:{ $cond: [{ $eq: ["$isPaid", true] }, 1, 0]}},
+                    totalSales:{$sum:{ $cond: [{ $eq: ["$isPaid", true] }, "$totalPrice", 0]}},
+                }
+            }
+         ])
+
+    const users = await User.aggregate([
+        {
+            $group:{
+                    _id:null,
+                    //  _id: null: जब हम _id को null सेट करते हैं, तो इसका मतलब है कि हमें डेटा को किसी विशेष कैटेगरी (जैसे शहर या यूजर) के आधार पर अलग-अलग समूहों में नहीं बांटना है। हमें डेटाबेस के सारे रिकॉर्ड्स को एक ही ग्रुप में मिलाकर कैलकुलेशन करनी है।
+                    numUsers: {$sum: 1}
+                    // numUrders: { $sum: 1 }: यह डेटाबेस में मौजूद हर एक user के लिए 1 जोड़ता है। यानी यह आपको बताएगा कि वेबसाइट पर अब तक कुल कितने ऑर्डर्स (Total Orders Count) आए हैं।
+                }
+        }
+    ]);
+    const dailyOrders = await Order.aggregate([
+        {
+            $group:{
+                    _id:{$dateToString:{format:"%Y-%m-%d",date:'$createdAt'}},
+                    numOrders:{$sum:1},
+                    sales:{$sum:"$totalPrice"},
+                    // totalSales: { $sum: "$totalPrice" }: यह हर ऑर्डर के अंदर मौजूद totalPrice फ़ील्ड की वैल्यू को आपस में जोड़ता जाता है। इससे आपको पता चलता है कि आपकी वेबसाइट पर अब तक कुल कितने रुपये की बिक्री (Total Revenue/Sales) हुई है।
+                }
+        },
+        {
+            $sort:{
+                _id:1
+            }
+        }
+    ]);
+    const productCategories = await Product.aggregate([
+        {
+            $group:{
+                _id:"$category",
+                count:{$sum:1}
+            }
+        }
+    ]);
+    res.send({users,orders,dailyOrders,productCategories});
+
+   })
+    );
     orderRouter.get('/mine',isAuth,  
         expressAsyncHandler(async (req, res) => {
         const order = await Order.find({user:req.user._id});

@@ -75,19 +75,21 @@ export default function Placeorderscreen() {
                 }  //by having this header we can access the user info from the backend and we can use it to create the order
             }
           );
-            ctxDispatch({
-                type: 'CART_CLEAR'
-            });
-            localStorage.removeItem('cartItems');
-            dispatch({type:'CREATE_SUCCESS'});
-            navigate(`/order/${data.order._id}`);
-        }
-        catch(error){
-            dispatch({type:'CREATE_FAIL'});
-            toast.error(geterror(error));
-        }
-  };
+           await axios.put('/api/users/update-cart', {
+      userId: userInfo._id,
+      cartItems: []
+    }, {
+      headers: { Authorization: `Bearer ${userInfo.token}` }
+    });
 
+    ctxDispatch({ type: 'CART_CLEAR' });
+    dispatch({type: 'CREATE_SUCCESS'});
+    navigate(`/order/${data.order._id}`);
+  } catch(error) {
+    dispatch({type: 'CREATE_FAIL'});
+    toast.error(geterror(error));
+  }
+   };
   useEffect(()=>{
       if(!cart.paymentMethod){
         navigate('/payment'); 

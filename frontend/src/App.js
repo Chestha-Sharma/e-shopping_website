@@ -24,6 +24,7 @@ import Searchbox from "./components/Searchbox";
 import Searchscreen from "./screens/Searchscreen";
 import Protectedrouter from "./components/Protectedrouter";
 import Adminroute from "./components/Adminroute";
+import Dashboardscreen from "./screens/Dashboardscreen";
 function App() {
    const {state , dispatch : ctxdispatch} = useContext(Store); 
    const navigate = useNavigate();

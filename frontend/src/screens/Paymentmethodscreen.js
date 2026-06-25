@@ -29,8 +29,9 @@ export default function Paymentmethodscreen() {
             return;
         }
         ctxdispatch({
-            type : paymentMethodName //{} nhi lagaya mtlb direct string dispatch ki h
-        });
+               type: 'SAVE_PAYMENT_METHOD',
+               payload: paymentMethodName
+           });
         localStorage.setItem('paymentMethod',paymentMethodName);
         navigate('/placeorder');
     };

@@ -52,6 +52,19 @@ userRouter.post(
 // Jab koi Plain Text, HTML Page, ya File bhejni ho, toh .send() ka use karein.
 
 // Aapka concept bilkul sahi hai, bas isi tarah dhyan se samajhte rahiye!
+
+userRouter.put('/update-cart', isAuth, expressAsyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+  if (user) {
+    user.cartItems = req.body.cartItems;
+    await user.save();
+    res.send({ message: 'Cart updated successfully' });
+  } else {
+    res.status(404).send({ message: 'User not found' });
+  }
+}));
+
+
 userRouter.post('/signup', expressAsyncHandler(async (req, res) => {
 const newUser = new User({
   name : req.body.name,
@@ -92,28 +105,7 @@ userRouter.put('/profile', isAuth, expressAsyncHandler(async (req, res) => {
    }
 }));
 
-userRouter.put('/update-cart', async (req, res) => {
-  try {
-    const { userId, cartItems } = req.body;
-    
-    // 1. डेटाबेस में यूज़र को ढूंढें
-    const user = await User.findById(userId);
-
-    if (user) {
-      // 2. यूज़र की पुरानी कार्ट को नए आइटम्स से रिप्लेस करें
-      user.cartItems = cartItems; 
-      
-      // 3. डेटाबेस में सेव करें
-      const updatedUser = await user.save();
-      
-      res.send({ message: 'Cart updated successfully in DB', cartItems: updatedUser.cartItems });
-    } else {
-      res.status(404).send({ message: 'User not found' });
-    }
-  } catch (error) {
-    res.status(500).send({ message: 'Server Error', error: error.message });
-  }
-});
+ 
 
 export default userRouter;
 
