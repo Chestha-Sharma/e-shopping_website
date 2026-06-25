@@ -1,11 +1,14 @@
 import React from 'react'
 import { useContext ,useReducer } from 'react';
-import { useLocation ,Link } from 'react-router-dom';
+import { useLocation ,Link, useNavigate } from 'react-router-dom';
 import { Store } from '../store';
 import { useEffect } from 'react';
 import axios from 'axios';
 import Loading from '../components/Loading';
 import Msg from '../components/MassageBox';
+import { Button, Col, Row } from 'react-bootstrap';
+import { toast } from 'react-toastify';
+import { geterror } from '../util';
 
 
 const reducer = (state, action) => {
@@ -16,19 +19,29 @@ const reducer = (state, action) => {
             return { ...state, loading: false, products: action.payload.products, countProducts: action.payload.countProducts, page: action.payload.page, pages: action.payload.pages };
         case 'FETCH_FAIL':
             return { ...state, loading: false, error: action.payload };
+             case 'CREATE_REQUEST':
+             return { ...state, loadingCreate: true };
+        case 'CREATE_SUCCESS':
+          return {
+            ...state,
+            loadingCreate: false,
+          };
+        case 'CREATE_FAIL':
+          return { ...state, loadingCreate: false };
         default:
             return state;
     }
 }
 export default function Productlistscreen() {
 
-    const [{ loading, error, products, countProducts, page, pages }, dispatch] = useReducer(reducer, {
+    const [{ loading, error, products, countProducts, page, pages ,loadingCreate }, dispatch] = useReducer(reducer, {
         loading: true,
         error: '',
         products: [],
         countProducts: 0,
         page: 1,
-        pages: 0
+        pages: 0,
+        loadingCreate: false
     });
 
 //     {
@@ -43,7 +56,8 @@ export default function Productlistscreen() {
 // क) जब URL से Query Parameters (जैसे सर्च टर्म, फिल्टर, या पेज नंबर) निकालने हों
 // कब: जब आप सर्च स्क्रीन (Searchscreen.js) बना रहे हैं और यूजर ने ऊपर सर्च बॉक्स में "shirts" लिखा है। URL बन गया /search?query=shirts.
 
-    const { search , pathname } = useLocation();
+    const { search } = useLocation();
+    const navigate = useNavigate();
     const sp = new URLSearchParams(search); // /search?category=Shirts
      const filterpage = sp.get('page') || 1;
      const { state } = useContext(Store);
@@ -67,10 +81,44 @@ export default function Productlistscreen() {
         }
   
         fetchData();
-     },[userInfo,filterpage])
+     },[userInfo,filterpage]);
+
+    const createHandle = async ()=>{
+       
+        try{
+            dispatch({type : 'CREATE_REQUEST'});
+            const {data} = await axios.post('/api/products',{},{
+                    headers:{
+                        authorization : `Bearer ${userInfo.token}`
+                    } 
+            });
+            toast.success('Product Created Successfully');
+            dispatch({type : 'CREATE_SUCCESS'});
+            navigate(`/admin/products/${data.product._id}`);
+        }
+        catch(err){
+            toast.error(geterror(err));
+            dispatch({ type: 'FETCH_FAIL', payload: geterror(err) });
+        }
+
+    }
+
   return (
     <div>
       <h1>Products</h1>
+      <Row>
+        <Col>
+        <h1>Products</h1>
+        </Col>
+        <Col className='col text-end'>
+        <div>
+            <Button type='button' onClick={createHandle}>
+                Create Product
+            </Button>
+            </div>
+        </Col>
+      </Row>
+      {loadingCreate && <Loading />}
       {
         loading ?
         <Loading />
