@@ -3,8 +3,73 @@ import expressAsyncHandler from 'express-async-handler';
 import express from 'express';
 import bcrypt from 'bcryptjs';
 import User from '../models/usermodel.js';
-import { generateToken, isAuth } from '../utils.js';
+import { generateToken, isAuth , isAdmin } from '../utils.js';
 const userRouter = express.Router();
+
+
+userRouter.get('/',isAuth,isAdmin,
+  expressAsyncHandler(async (req,res)=>{
+    const users = await User.find({});
+    res.send(users);
+  })
+);
+
+
+userRouter.get('/:id',isAuth,isAdmin,
+  expressAsyncHandler(async (req,res)=>{
+    const user = await User.findById(req.params.id);
+    if(user){
+      res.send(user);
+    }
+    else{
+      res.status(404).send({message : 'User Not Found'});
+    }
+  })
+);
+
+// Express में राउट्स का मिलान ऊपर से नीचे के क्रम में होता है। जब फ्रंटएंड से /api/users/profile पर PUT रिक्वेस्ट आती है, तो एक्सप्रेस को लगता है कि यह /:id वाला राउट है, जहाँ id की वैल्यू "profile" है!
+// चूँकि "profile" एक वैध MongoDB ObjectId नहीं है, इसलिए मोंगूज डेटाबेस क्वेरी User.findById("profile") करते समय क्रैश हो जाता है और यही एरर थ्रो करता है।
+
+userRouter.put('/profile', isAuth, expressAsyncHandler(async (req, res) => {
+   const user = await User.findById(req.user._id); //took user from database
+   if (user) {
+     user.name = req.body.name || user.name;
+     user.email = req.body.email || user.email;
+     if(req.body.password){
+       user.password = bcrypt.hashSync(req.body.password, 10);
+     };
+     const updatedUser = await user.save(); //saved user in database
+     res.send({
+       _id: updatedUser._id,
+       name: updatedUser.name,
+       email: updatedUser.email,
+       isAdmin: updatedUser.isAdmin,
+       token: generateToken(updatedUser),
+       cartItems: updatedUser.cartItems
+     });
+   } else {
+     res.status(404).send({ message: 'User not found' });
+   }
+}));
+
+
+userRouter.put('/:id',isAuth,isAdmin,
+  expressAsyncHandler(async (req,res)=>{
+    const user = await User.findById(req.params.id);
+    if(user){
+      user.name = req.body.name || user.name;
+      user.email = req.body.email || user.email;
+      user.isAdmin = req.body.isAdmin || user.isAdmin;
+      await user.save();
+      res.send({message : 'User Updated Successfully'});
+    }
+    else{
+      res.status(404).send({message : 'User Not Found'});
+    }
+  })
+);
+
+
 
 userRouter.post(
   '/signin',
@@ -82,27 +147,6 @@ res.send({
           token : generateToken(createdUser),
           cartItems: createdUser.cartItems
         });
-}));
-userRouter.put('/profile', isAuth, expressAsyncHandler(async (req, res) => {
-   const user = await User.findById(req.user._id); //took user from database
-   if (user) {
-     user.name = req.body.name || user.name;
-     user.email = req.body.email || user.email;
-     if(req.body.password){
-       user.password = bcrypt.hashSync(req.body.password, 10);
-     };
-     const updatedUser = await user.save(); //saved user in database
-     res.send({
-       _id: updatedUser._id,
-       name: updatedUser.name,
-       email: updatedUser.email,
-       isAdmin: updatedUser.isAdmin,
-       token: generateToken(updatedUser),
-       cartItems: updatedUser.cartItems
-     });
-   } else {
-     res.status(404).send({ message: 'User not found' });
-   }
 }));
 
  

@@ -28,6 +28,8 @@ import Dashboardscreen from "./screens/Dashboardscreen";
 import Productlistscreen from "./screens/Productlistscreen";
 import Producteditscreen from "./screens/Producteditscreen";
 import Orderlistscreen from "./screens/Orderlistscreen";
+import Userlistscreen from "./screens/Userlistscreen";
+import Usereditscreen from "./screens/Usereditscreen";
 function App() {
    const {state , dispatch : ctxdispatch} = useContext(Store); 
    const navigate = useNavigate();
@@ -275,6 +277,18 @@ function App() {
             </Adminroute>
             }
             /> 
+            <Route path="/admin/users" element={
+            <Adminroute>
+              <Userlistscreen />
+            </Adminroute>
+            }
+            />
+            <Route path="/admin/user/:id" element={
+            <Adminroute>
+              <Usereditscreen />
+            </Adminroute>
+            }
+            />
         <Route path="/" element={<Homescreen />} />
       </Routes>
       </Container>
