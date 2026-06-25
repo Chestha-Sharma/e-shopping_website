@@ -30,9 +30,30 @@ productRouter.post('/',
       res.status(201).send({ message: 'new Product created successfully', product: createdProduct });
   })
 )
-
-
-
+ 
+productRouter.put('/:id', 
+  isAuth,
+  isAdmin,
+  expressAsyncHandler(async (req,res)=>{
+        const productId = req.params.id;
+        const product = await Product.findById(productId);
+        if(product){
+          product.name = req.body.name;
+          product.price = req.body.price;
+          product.description = req.body.description;
+          product.image = req.body.image;
+          product.category = req.body.category;
+          product.brand = req.body.brand;
+          product.countInStock = req.body.countInStock;
+          product.rating = req.body.rating;
+          product.numReviews = req.body.numReviews;
+          await product.save();
+          res.send({message : 'Product Updated Successfully'});
+        } else{
+          res.status(404).send({message : 'Product Not Found'});
+        }
+  }) 
+);
 const PAGE_SIZE = 3;
 
 
