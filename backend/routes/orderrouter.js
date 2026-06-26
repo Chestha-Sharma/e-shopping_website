@@ -42,55 +42,6 @@ orderRouter.post('/',isAuth, //isAuth is a middleware function responsiblr for c
         res.status(200).send({ message: 'Order found', order });
     })
 );
-   orderRouter.get('/:id',isAuth,  
-        expressAsyncHandler(async (req, res) => {
-        const order = await Order.findById(req.params.id);
-        if (!order) {
-            return res.status(404).send({ message: 'Order not found' });
-        }
-        res.status(200).send({ message: 'Order found', order });
-    })
-);
-
-orderRouter.put('/:id/deliver',isAuth,
-    expressAsyncHandler(async (req, res) => {
-        const order = await Order.findById(req.params.id);
-        if (!order) {
-            return res.status(404).send({ message: 'Order not found' });
-        }
-        order.isDelivered = true;
-        order.deliveredAt = Date.now();
-        const updatedOrder = await order.save();
-        res.status(200).send({ message: 'Order delivered successfully', order: updatedOrder });
-    })
-);
-
-
-
-orderRouter.put('/:id/pay',isAuth,
-    expressAsyncHandler(async (req, res) => {
-        const order = await Order.findById(req.params.id);
-        if (!order) {
-            return res.status(404).send({ message: 'Order not found' });
-        }
-        order.paidAt = Date.now();
-        order.isPaid = true;
-        order.paymentResult={
-            id : req.body.id,
-            status : req.body.status,
-            update_time : req.body.update_time,
-            email_address : req.body.email_address,
-        }
-        const updatedOrder = await order.save();
-        res.status(200).send({ message: 'Order paid successfully', order: updatedOrder });
-    })
-);
-
-orderRouter.get('/',isAuth,isAdmin,
-expressAsyncHandler(async (req,res)=>{
-    const orders = await Order.find().populate('user','name');
-    res.send(orders);
-}));
 
 // Order.find() का काम
 // यह डेटाबेस के orders कलेक्शन में जाता है और वहाँ रखे प्रत्येक ऑर्डर का पूरा डॉक्यूमेंट उठाता है। इस डॉक्यूमेंट के अंदर ऑर्डर से जुड़ी हर जानकारी पहले से मौजूद होती है, जैसे:
@@ -189,4 +140,55 @@ expressAsyncHandler(async (req,res)=>{
 
    })
     );
+
+    orderRouter.get('/',isAuth,isAdmin,
+expressAsyncHandler(async (req,res)=>{
+    const orders = await Order.find().populate('user','name');
+    res.send(orders);
+}));
+
+   orderRouter.get('/:id',isAuth,  
+        expressAsyncHandler(async (req, res) => {
+        const order = await Order.findById(req.params.id);
+        if (!order) {
+            return res.status(404).send({ message: 'Order not found' });
+        }
+        res.status(200).send({ message: 'Order found', order });
+    })
+);
+
+orderRouter.put('/:id/deliver',isAuth,
+    expressAsyncHandler(async (req, res) => {
+        const order = await Order.findById(req.params.id);
+        if (!order) {
+            return res.status(404).send({ message: 'Order not found' });
+        }
+        order.isDelivered = true;
+        order.deliveredAt = Date.now();
+        const updatedOrder = await order.save();
+        res.status(200).send({ message: 'Order delivered successfully', order: updatedOrder });
+    })
+);
+
+
+
+orderRouter.put('/:id/pay',isAuth,
+    expressAsyncHandler(async (req, res) => {
+        const order = await Order.findById(req.params.id);
+        if (!order) {
+            return res.status(404).send({ message: 'Order not found' });
+        }
+        order.paidAt = Date.now();
+        order.isPaid = true;
+        order.paymentResult={
+            id : req.body.id,
+            status : req.body.status,
+            update_time : req.body.update_time,
+            email_address : req.body.email_address,
+        }
+        const updatedOrder = await order.save();
+        res.status(200).send({ message: 'Order paid successfully', order: updatedOrder });
+    })
+);
+
 export default orderRouter; 

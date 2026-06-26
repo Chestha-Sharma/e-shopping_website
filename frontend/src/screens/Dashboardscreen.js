@@ -5,6 +5,7 @@ import Chart from 'react-google-charts';
 import Loading from '../components/Loading';
 import Msg from '../components/MassageBox';
 import { Store } from '../store';
+import { toast } from 'react-toastify';
 const reducer=(state,action)=>{
    switch(action.type){
     case 'FETCH_REQUEST':
@@ -41,7 +42,7 @@ export default function Dashboardscreen() {
            }
         );
         dispatch({type : 'FETCH_SUCCESS' , payload : data});
-        } catch(error){
+        } catch(error){ 
             dispatch({type : 'FETCH_FAIL' , payload : error.message});
         }  
      };
