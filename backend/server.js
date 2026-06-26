@@ -125,11 +125,15 @@ import productRouter from './routes/productrouter.js';
 import userRouter from './routes/userrouter.js';
 import orderRouter from './routes/orderrouter.js';
 import uploadRouter from './routes/uploadrouter.js'; 
+import { fileURLToPath } from 'url';
+
 const app = express();
 
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-const __dirname = path.resolve(); 
+
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true })); 
 dotenv.config(); 
