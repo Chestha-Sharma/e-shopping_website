@@ -4,8 +4,7 @@
 import axios from 'axios';
 import { useEffect, useReducer } from 'react';
 import { Col, Row } from 'react-bootstrap';
-import { Helmet } from 'react-helmet-async';
-import logger from 'use-reducer-logger';
+import { Helmet } from 'react-helmet-async'; 
 import Loading from '../components/Loading';
 import Msg from '../components/MassageBox';
 import Product from '../components/Product';
@@ -26,7 +25,7 @@ const reducer = (state, action) => {
   }
 };
 function HomeScreen() {
-  const [{ loading, error, products }, dispatch] = useReducer(logger(reducer), {
+  const [{ loading, error, products }, dispatch] = useReducer((reducer), {
     products: [],
     loading: true,
     error: '',
