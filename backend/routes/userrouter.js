@@ -6,27 +6,6 @@ import User from '../models/usermodel.js';
 import { generateToken, isAuth , isAdmin } from '../utils.js';
 const userRouter = express.Router();
 
-
-userRouter.get('/',isAuth,isAdmin,
-  expressAsyncHandler(async (req,res)=>{
-    const users = await User.find({});
-    res.send(users);
-  })
-);
-
-
-userRouter.get('/:id',isAuth,isAdmin,
-  expressAsyncHandler(async (req,res)=>{
-    const user = await User.findById(req.params.id);
-    if(user){
-      res.send(user);
-    }
-    else{
-      res.status(404).send({message : 'User Not Found'});
-    }
-  })
-);
-
 // Express में राउट्स का मिलान ऊपर से नीचे के क्रम में होता है। जब फ्रंटएंड से /api/users/profile पर PUT रिक्वेस्ट आती है, तो एक्सप्रेस को लगता है कि यह /:id वाला राउट है, जहाँ id की वैल्यू "profile" है!
 // चूँकि "profile" एक वैध MongoDB ObjectId नहीं है, इसलिए मोंगूज डेटाबेस क्वेरी User.findById("profile") करते समय क्रैश हो जाता है और यही एरर थ्रो करता है।
 
@@ -51,23 +30,6 @@ userRouter.put('/profile', isAuth, expressAsyncHandler(async (req, res) => {
      res.status(404).send({ message: 'User not found' });
    }
 }));
-
-
-userRouter.put('/:id',isAuth,isAdmin,
-  expressAsyncHandler(async (req,res)=>{
-    const user = await User.findById(req.params.id);
-    if(user){
-      user.name = req.body.name || user.name;
-      user.email = req.body.email || user.email;
-      user.isAdmin = req.body.isAdmin || user.isAdmin;
-      await user.save();
-      res.send({message : 'User Updated Successfully'});
-    }
-    else{
-      res.status(404).send({message : 'User Not Found'});
-    }
-  })
-);
 
 
 
@@ -149,6 +111,70 @@ res.send({
         });
 }));
 
+
+userRouter.get('/',isAuth,isAdmin,
+  expressAsyncHandler(async (req,res)=>{
+    const users = await User.find({});
+    res.send(users);
+  })
+);
+
+
+userRouter.get('/:id',isAuth,isAdmin,
+  expressAsyncHandler(async (req,res)=>{
+    const user = await User.findById(req.params.id);
+    if(user){
+      res.send(user);
+    }
+    else{
+      res.status(404).send({message : 'User Not Found'});
+    }
+  })
+);
+
+
+userRouter.put('/:id',isAuth,isAdmin,
+  expressAsyncHandler(async (req,res)=>{
+    const user = await User.findById(req.params.id);
+    if(user){
+      user.name = req.body.name || user.name;
+      user.email = req.body.email || user.email;
+      const newIsAdmin = Boolean(req.body.isAdmin );
+      if(user.isAdmin && !newIsAdmin){
+        const adminCount = await User.countDocuments({isAdmin : true});
+        if(adminCount <= 1){
+          res.status(403).send({message : 'You cannot delete the last admin'});
+          return;
+        }
+      }
+      user.isAdmin = req.body.isAdmin !== undefined ? req.body.isAdmin : user.isAdmin;
+      await user.save();
+      res.send({message : 'User Updated Successfully'});
+    }
+    else{
+      res.status(404).send({message : 'User Not Found'});
+    }
+  })
+);
+
+userRouter.delete('/:id',isAuth,isAdmin,
+  expressAsyncHandler(async (req,res)=>{
+    const user = await User.findById(req.params.id);
+    if(user){
+      if(user.isAdmin){
+        res.status(403).send({message : 'You cannot delete an admin'});
+        return;
+      }
+      else{
+      await user.deleteOne();
+      res.send({message : 'User Deleted Successfully'});
+      }
+    }
+    else{
+      res.status(404).send({message : 'User Not Found'});
+    }
+  })
+);
  
 
 export default userRouter;

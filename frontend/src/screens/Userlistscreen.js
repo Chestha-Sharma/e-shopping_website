@@ -10,6 +10,7 @@ import { geterror } from '../util';
 import axios from 'axios';
 import { Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 const reducer = (state, action) => {
   switch (action.type) {
     case 'FETCH_REQUEST':
@@ -22,7 +23,18 @@ const reducer = (state, action) => {
       };
     case 'FETCH_FAIL':
       return { ...state, loading: false, error: action.payload };
-
+     case 'DELETE_REQUEST':
+      return { ...state, loadingDelete: true, successDelete: false };
+    case 'DELETE_SUCCESS':
+      return {
+        ...state,
+        loadingDelete: false,
+        successDelete: true,
+      };
+    case 'DELETE_FAIL':
+      return { ...state, loadingDelete: false };
+    case 'DELETE_RESET':
+      return { ...state, loadingDelete: false, successDelete: false }
     default:
       return state;
   }
@@ -30,7 +42,7 @@ const reducer = (state, action) => {
 
 
 export default function Userlistscreen() {
- const [{ loading, error, users }, dispatch] = useReducer(reducer, {
+ const [{ loading, error, users , loadingDelete , successDelete}, dispatch] = useReducer(reducer, {
     loading: true,
     error: '',
   });
@@ -54,14 +66,42 @@ export default function Userlistscreen() {
         });
       }
     };
+    if(successDelete){
+        dispatch({ type: 'DELETE_RESET' });
+    }
+    else
     fetchData();
-  }, [userInfo]);
+  }, [userInfo,successDelete]);
+
+   
+    const deleteHandler = async (user) => {
+       if(window.confirm('Are you sure you want to delete this user?')){
+        try{
+            dispatch({type : 'DELETE_REQUEST'});
+            await axios.delete(`/api/users/${user._id}`,{
+                headers : {
+                    authorization : `Bearer ${userInfo.token}`
+                }
+            });
+            toast.success('User Deleted Successfully');
+            dispatch({ type: 'DELETE_SUCCESS' });
+        }
+        catch(e){
+            toast.error(geterror(e));
+            dispatch({ type: 'DELETE_FAIL', payload: geterror(e) });
+        }
+       }
+    }
+
+
+
   return (
     <div>
       <Helmet>
         <title>Users</title>
       </Helmet>
       <h1>Users</h1>
+      {loadingDelete && <Loading />}
       {loading ? (
         <Loading></Loading>
       ) : error ? (
@@ -88,6 +128,14 @@ export default function Userlistscreen() {
                     <Button type='button' variant='light' onClick={()=>navigate(`/admin/user/${user._id}`)}>
                         Edit
                     </Button>
+                     &nbsp;
+                  <Button
+                    type="button"
+                    variant="light"
+                    onClick={() => deleteHandler(user)}
+                  >
+                    Delete
+                  </Button>
                 </td>
               </tr>
             ))}
