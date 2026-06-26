@@ -8,10 +8,6 @@ import { Helmet } from 'react-helmet-async';
 import Loading from '../components/Loading';
 import Msg from '../components/MassageBox';
 import Product from '../components/Product';
-//logger is like console.log for reducer it will log the action and the state before and after the action is dispatched and it will help us to debug our reducer and see how the state is changing based on the actions dispatched.
-//  We use a logger in a useReducer setup primarily for debugging and state tracking.
-// In a complex application, the state changes many times. Without a logger, it is difficult to know exactly when the state changed, what action triggered it, and what the data looked like before and after the update.
-// logger is just for testing and debugging purpose and it will log the action and the state before and after the action is dispatched and it will help us to debug our reducer and see how the state is changing based on the actions dispatched. It is not necessary to use logger in production code, it is just for development and debugging purpose.
 const reducer = (state, action) => {
   switch (action.type) {
     case 'FETCH_REQUEST': //when we start fetching data from backend then we set loading to true and when we get the data from backend then we set loading to false and set products to the data we got from backend and if there is an error then we set loading to false and set error to the error we got from backend.
