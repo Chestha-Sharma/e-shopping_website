@@ -127,14 +127,12 @@ import orderRouter from './routes/orderrouter.js';
 import uploadRouter from './routes/uploadrouter.js'; 
 const app = express();
 
-//  मिडिलवेयर्स (Body Parsers)
+
+
+const __dirname = path.resolve(); 
 app.use(express.json()); 
-app.use(express.urlencoded({ extended: true }));
-
-// एनवायरनमेंट वेरिएबल्स लोड करना
+app.use(express.urlencoded({ extended: true })); 
 dotenv.config(); 
-
-// डेटाबेस कनेक्शन (MongoDB Atlas)
 const connectdb = async () => {
   try {
     await mongoose.connect(process.env.MONGODB_URI);
@@ -143,14 +141,8 @@ const connectdb = async () => {
     console.log('Database Connection Error:', err);
   }
 };
-connectdb();
-
-const PORT = process.env.PORT;
-app.use(express.static(path.join(__dirname, '/frontend/build'))); 
-
- 
-
- 
+connectdb(); 
+const PORT = process.env.PORT;  
 app.use('/api/seed', seedRouter);
 app.use('/api/products', productRouter);
 app.use('/api/users', userRouter);  
@@ -158,19 +150,14 @@ app.use('/api/order', orderRouter);
 app.use('/api/upload', uploadRouter);
 app.get('/api/keys/paypal', (req, res) => {
   res.send(process.env.PAYPAL_CLIENT_ID || 'sb');
-});  
-const __dirname = path.resolve();
-
-//Phir frontend serve karo - SABSE LAST MEIN
+}); 
 app.use(express.static(path.join(__dirname, '/frontend/build')));
 app.get('*', (req, res) =>
   res.sendFile(path.join(__dirname, '/frontend/build/index.html'))
-);
-
+); 
 app.use((err, req, res, next) => {
    res.status(500).send({ message: err.message });   
-});
- 
+}); 
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
 });
