@@ -117,8 +117,8 @@ orderRouter.post('/',isAuth, //isAuth is a middleware function responsiblr for c
         {
             $group:{
                     _id:{$dateToString:{format:"%Y-%m-%d",date:'$createdAt'}},
-                    numOrders:{$sum:1},
-                    sales:{$sum:"$totalPrice"},
+                    numOrders:{$sum:{ $cond: [{ $eq: ["$isPaid", true] }, 1, 0]}},
+                    sales:{$sum:{ $cond: [{ $eq: ["$isPaid", true] }, "$totalPrice", 0]}},
                     // totalSales: { $sum: "$totalPrice" }: यह हर ऑर्डर के अंदर मौजूद totalPrice फ़ील्ड की वैल्यू को आपस में जोड़ता जाता है। इससे आपको पता चलता है कि आपकी वेबसाइट पर अब तक कुल कितने रुपये की बिक्री (Total Revenue/Sales) हुई है।
                 }
         },
