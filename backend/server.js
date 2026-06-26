@@ -124,7 +124,7 @@ import seedRouter from './routes/seedrouter.js';
 import productRouter from './routes/productrouter.js';
 import userRouter from './routes/userrouter.js';
 import orderRouter from './routes/orderrouter.js';
-import uploadRouter from './routes/uploadrouter.js';
+import uploadRouter from './routes/uploadrouter.js'; 
 const app = express();
 
 //  मिडिलवेयर्स (Body Parsers)
@@ -146,6 +146,10 @@ const connectdb = async () => {
 connectdb();
 
 const PORT = process.env.PORT;
+app.use(express.static(path.join(__dirname, '/frontend/build'))); 
+
+ 
+
  
 app.use('/api/seed', seedRouter);
 app.use('/api/products', productRouter);
@@ -155,6 +159,14 @@ app.use('/api/upload', uploadRouter);
 app.get('/api/keys/paypal', (req, res) => {
   res.send(process.env.PAYPAL_CLIENT_ID || 'sb');
 });  
+const __dirname = path.resolve();
+
+//Phir frontend serve karo - SABSE LAST MEIN
+app.use(express.static(path.join(__dirname, '/frontend/build')));
+app.get('*', (req, res) =>
+  res.sendFile(path.join(__dirname, '/frontend/build/index.html'))
+);
+
 app.use((err, req, res, next) => {
    res.status(500).send({ message: err.message });   
 });
