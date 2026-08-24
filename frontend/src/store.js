@@ -1,6 +1,6 @@
  
 import { createContext, useReducer } from 'react';
-import {axiosInstance} from 'lib/axios.js';
+import {axiosInstance} from './lib/axios.js';
 
 export const Store = createContext(); 
 const syncCartWithDB = async (userInfo, cartItems) => {
