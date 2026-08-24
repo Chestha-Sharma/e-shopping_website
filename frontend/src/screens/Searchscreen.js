@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import {axiosInstance} from '../lib/axios.js';
+import {axiosInstance} from './lib/axios.js';
 import { toast } from 'react-toastify';
 import { geterror } from '../util';
 import { Helmet } from 'react-helmet-async';

@@ -4,7 +4,7 @@ import Loading from '../components/Loading'
 import Msg from '../components/MassageBox'
 import { useNavigate } from 'react-router-dom';
 import { geterror } from '../util';
-import {axiosInstance}    from '../lib/axios.js';
+import {axiosInstance} from './lib/axios.js';
 import { Button } from 'react-bootstrap';
 import { Store } from '../store';
 

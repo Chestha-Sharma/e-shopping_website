@@ -7,7 +7,7 @@ import { useContext } from 'react';
 import { Store } from '../store';
 import { useEffect } from 'react';
 import { geterror } from '../util';
-import {axiosInstance} from '../lib/axios.js';
+import {axiosInstance} from './lib/axios.js';
 import { Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';

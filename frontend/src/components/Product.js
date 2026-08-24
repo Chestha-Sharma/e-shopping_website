@@ -1,4 +1,4 @@
-import {axiosInstance} from "../lib/axios.js";
+import {axiosInstance} from "./lib/axios.js";
 import { useContext } from "react";
 import { Button, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
