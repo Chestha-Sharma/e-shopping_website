@@ -17,7 +17,7 @@ import Orderscreen from "./screens/Orderscreen";
 import Orderhistoryscreen from "./screens/Orderhistoryscreen";
 import Profilescreen from "./screens/Profilescreen";
 import { geterror } from "./util";
-import axiosInstance from "./lib/axios.js";
+import { axiosInstance } from "./lib/axios.js";
 import Searchbox from "./components/Searchbox";
 import Searchscreen from "./screens/Searchscreen";
 import Protectedrouter from "./components/Protectedrouter";
