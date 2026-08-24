@@ -58,23 +58,10 @@ export default function Productlistscreen() {
         loadingCreate: false,
         loadingDelete: false,  
         successDelete: false,   
-    });
-
-//     {
-//   pathname: "/search",             // यह बताता है कि आप किस पेज पर हैं
-//   search: "?query=shirts&page=2",  // यह '?' के बाद का पूरा हिस्सा (Query String) देता है
-//   hash: "",                        // URL में अगर '#' के बाद कुछ है (जैसे #about)
-//   state: null                      // पिछले पेज से भेजा गया कोई गुप्त डेटा (Hidden Data)
-// }
-// इसे कब, कहाँ और कैसे यूज़ करना है? (How to Know?)
-// आपको इसका इस्तेमाल तब करना है जब आपकी स्क्रीन पर दिखने वाला डेटा सीधे ब्राउज़र के URL पर निर्भर करता हो। इसके कुछ मुख्य उदाहरण नीचे दिए गए हैं:
-
-// क) जब URL से Query Parameters (जैसे सर्च टर्म, फिल्टर, या पेज नंबर) निकालने हों
-// कब: जब आप सर्च स्क्रीन (Searchscreen.js) बना रहे हैं और यूजर ने ऊपर सर्च बॉक्स में "shirts" लिखा है। URL बन गया /search?query=shirts.
-
+    }); 
     const { search } = useLocation();
     const navigate = useNavigate();
-    const sp = new URLSearchParams(search); // /search?category=Shirts
+    const sp = new URLSearchParams(search);  
      const filterpage = sp.get('page') || 1;
      const { state } = useContext(Store);
      const { userInfo } = state;

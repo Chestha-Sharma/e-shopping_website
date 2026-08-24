@@ -74,7 +74,7 @@ export const ratings = [
 export default function SearchScreen() {
   const navigate = useNavigate();
   const { search } = useLocation();
-  const sp = new URLSearchParams(search); // /search?category=Shirts
+  const sp = new URLSearchParams(search); 
   const category = sp.get('category') || 'all';
   const query = sp.get('query') || 'all';
   const price = sp.get('price') || 'all';
@@ -119,7 +119,7 @@ export default function SearchScreen() {
   }, [dispatch]);
 
 const getFilterUrl = (filter) => {
-  const filterPage = filter.page || 1; // ← bas yahi badlo
+  const filterPage = filter.page || 1;  
   const filterCategory = filter.category || category;
   const filterQuery = filter.query || query;
   const filterRating = filter.rating || rating;

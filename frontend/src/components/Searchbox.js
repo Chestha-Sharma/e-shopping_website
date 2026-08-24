@@ -20,8 +20,7 @@ export default function Searchbox() {
           area-describedby="button-search"
           > 
           </FormControl>
-            <Button variant='outline-primary' type='submit' id='button-search'> 
-                {/* we used same id in formcontrol to connect both of these */}
+            <Button variant='outline-primary' type='submit' id='button-search'>  
                  <i className='fas fa-search'></i>
             </Button>
           </InputGroup>

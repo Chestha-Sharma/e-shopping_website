@@ -1,10 +1,10 @@
-import { Card, Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import Rating from "./Rating";
-import { useContext } from "react";
-import { Store } from "../store.js";
 import axios from "axios";
+import { useContext } from "react";
+import { Button, Card } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { Store } from "../store.js";
+import Rating from "./Rating.js";
 
 function Product(props) {
   const { product } = props;

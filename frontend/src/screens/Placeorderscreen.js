@@ -37,21 +37,6 @@ export default function Placeorderscreen() {
     return Math.round(num * 100 +Number.EPSILON) / 100;
   };
    cart.ItemsPrice = round2decimals(cart.cartItems.reduce((a, c) => a + c.price * c.quantity, 0));
-//    In JavaScript's .reduce() method, a stands for the "Accumulator".
-
-// The purpose of the .reduce() method is to loop through an array and boil it down to a single value (in this case, calculating the total price of all items in the cart).
-
-// To understand exactly what is happening, let's break down the components of that line:
-
-// JavaScript
-// cart.cartItems.reduce((accumulator, currentValue) => { ... }, initialValue)
-// In your specific code:
-
-// a (Accumulator): This is a variable that stores the running total. Think of it like a calculator's memory. It carries the accumulated result from one item to the next.
-
-// c (Current Item): This represents the current item object inside the cartItems array that is currently being processed in the loop.
-
-// 0: This is the initial value. Before the loop starts, the accumulator a is set to 0.
    cart.itemsPrice = round2decimals(cart.cartItems.reduce((a, c) => a + c.price * c.quantity, 0));
     cart.shippingPrice = cart.itemsPrice > 100 ? 0 : 35;
     cart.taxPrice = round2decimals(cart.itemsPrice * 0.05);
@@ -72,7 +57,7 @@ export default function Placeorderscreen() {
             {
                 headers:{
                     Authorization:`Bearer ${userInfo.token}`
-                }  //by having this header we can access the user info from the backend and we can use it to create the order
+                }  
             }
           );
            await axios.put('/api/users/update-cart', {
@@ -134,13 +119,12 @@ export default function Placeorderscreen() {
               <ListGroup variant="flush">
                 {cart.cartItems.map((item) => (
                   <ListGroup.Item key={item._id}>
-                    <Row className="align-items-center">
-                      {/* Product Image and Name Column */}
+                    <Row className="align-items-center"> 
                       <Col md={6} className="d-flex align-items-center">
                         <img
                           src={item.image}
                           alt={item.name}
-                          className="img-fluid rounded img-thumbnail me-3" // me-3 se image aur naam ke beech gap aayega
+                          className="img-fluid rounded img-thumbnail me-3" 
                           style={{
                             width: '60px',
                             height: '60px',
@@ -153,16 +137,12 @@ export default function Placeorderscreen() {
                         >
                           {item.name}
                         </Link>
-                      </Col>
-
-                      {/* Quantity Column (Centered & Clean) */}
+                      </Col> 
                       <Col md={3} className="text-center">
                         <span className="fw-semibold">
                           Qty: {item.quantity}
                         </span>
-                      </Col>
-
-                      {/* Price Column (Centered & Clean) */}
+                      </Col> 
                       <Col md={3} className="text-center">
                         <span>{item.price} /-</span>
                       </Col>

@@ -3,9 +3,7 @@ import { useContext } from 'react';
 import { Button, Card, Col, ListGroup } from 'react-bootstrap';
 import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate } from 'react-router-dom';
-import { Store } from '../store';
-// Removed unused Row, Col, and useNavigate imports
-
+import { Store } from '../store'; 
 export default function CartScreen() {
   const navigate = useNavigate();
   const { state, dispatch: ctxDispatch } = useContext(Store);
@@ -46,10 +44,8 @@ export default function CartScreen() {
       ) : (
         <ListGroup>
           {cartItems.map((item) => (
-            <ListGroup.Item key={item._id} className="p-3">
-              {/* Flex container holding the entire row */}
-              <div className="d-flex align-items-center justify-content-between gap-3 flex-wrap">
-                {/* Product Image & Name */}
+            <ListGroup.Item key={item._id} className="p-3"> 
+              <div className="d-flex align-items-center justify-content-between gap-3 flex-wrap"> 
                 <div
                   className="d-flex align-items-center gap-3"
                   style={{ flex: '2', minWidth: '200px' }}
@@ -71,8 +67,7 @@ export default function CartScreen() {
                     {item.name}
                   </Link>
                 </div>
-
-                {/* Quantity Controls */}
+ 
                 <div
                   className="d-flex align-items-center gap-2"
                   style={{ flex: '1', minWidth: '120px' }}
@@ -93,16 +88,14 @@ export default function CartScreen() {
                     <i className="fas fa-plus-circle"></i>
                   </Button>
                 </div>
-
-                {/* Price */}
+ 
                 <div
                   className="fw-bold fs-5"
                   style={{ flex: '1', minWidth: '80px' }}
                 >
                   {item.price} /-
                 </div>
-
-                {/* Delete Button */}
+  
                 <div>
                   <Button
                     variant="danger"

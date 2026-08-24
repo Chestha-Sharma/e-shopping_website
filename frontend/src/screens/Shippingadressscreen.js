@@ -22,8 +22,8 @@ export default function Shippingadressscreen() {
     
     useEffect(() => {
          if(!userInfo){
-            navigate('/signin?redirect=/shipping'); //using this redirect when we will sign in here then after sign in i will redirect to shipping page not at home page
-         }
+            navigate('/signin?redirect=/shipping'); 
+        }
     },[userInfo,navigate]);
 
 

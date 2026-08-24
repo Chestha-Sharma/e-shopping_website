@@ -1,10 +1,4 @@
-//use to create schema of product
-
-import mongoose from "mongoose";
-
-//id auto generate hogi
-//mongoose.schema accept object as parameter and it will create a schema for us
-
+import mongoose from "mongoose"; 
 const productSchema = new mongoose.Schema(
       {
         name: {
@@ -51,7 +45,7 @@ const productSchema = new mongoose.Schema(
         }
       },
       {
-        timestamps: true, //last update and  create time of product
+        timestamps: true, 
       }
 );
 
