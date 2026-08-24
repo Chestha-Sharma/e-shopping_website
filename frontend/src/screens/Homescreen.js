@@ -1,4 +1,4 @@
-import axiosInstance from '../lib/axios.js';
+import {axiosInstance} from '../lib/axios.js';
 import { useEffect, useReducer } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { Helmet } from 'react-helmet-async'; 

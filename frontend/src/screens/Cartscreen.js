@@ -1,4 +1,4 @@
-import axiosInstance from '../lib/axios.js';
+import {axiosInstance} from '../lib/axios.js';
 import { useContext } from 'react';
 import { Button, Card, Col, ListGroup } from 'react-bootstrap';
 import { Helmet } from 'react-helmet-async';

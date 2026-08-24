@@ -7,7 +7,7 @@ import { useEffect } from 'react';
 import { geterror } from '../util';
 import Loading from '../components/Loading';
 import Msg from '../components/MassageBox';
-import axiosInstance from '../lib/axios.js';
+import {axiosInstance} from '../lib/axios.js';
 import { Button } from 'react-bootstrap';
 import { Helmet } from 'react-helmet-async';
 

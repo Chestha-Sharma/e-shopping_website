@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import { Button, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { geterror } from '../util';
-import axiosInstance from '../lib/axios.js';
+import {axiosInstance} from '../lib/axios.js';
 const reducer = (state, action) => {
     switch (action.type) {
         case 'UPDATE_REQUEST':

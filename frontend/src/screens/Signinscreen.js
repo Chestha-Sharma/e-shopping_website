@@ -1,7 +1,7 @@
 import { Button, Container, Form } from "react-bootstrap";
 import { Helmet } from "react-helmet-async";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import axiosInstance from "../lib/axios.js";
+import {axiosInstance} from "../lib/axios.js";
 import React, { useEffect, useState, useContext } from "react";
 import { Store } from "../store"; 
 import { toast } from "react-toastify";

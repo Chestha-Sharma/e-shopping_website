@@ -3,7 +3,7 @@ import { useContext ,useReducer } from 'react';
 import { useLocation ,Link, useNavigate } from 'react-router-dom';
 import { Store } from '../store';
 import { useEffect } from 'react';
-import axiosInstance from '../lib/axios.js';
+import {axiosInstance} from '../lib/axios.js';
 import Loading from '../components/Loading';
 import Msg from '../components/MassageBox';
 import { Button, Col, Row } from 'react-bootstrap';

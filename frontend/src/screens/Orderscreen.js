@@ -4,7 +4,7 @@ import Msg from '../components/MassageBox';
 import { useReducer, useEffect, useContext } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { geterror } from '../util';
-import axiosInstance from '../lib/axios.js';
+import {axiosInstance} from '../lib/axios.js';
 import { Helmet } from 'react-helmet-async';
 import { Button, Card, Col, ListGroup, Row } from 'react-bootstrap';
 import { Store } from '../store';

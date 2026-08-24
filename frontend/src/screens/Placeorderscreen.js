@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { ListGroup } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { geterror } from '../util';
-import axiosInstance from '../lib/axios.js';
+import {axiosInstance} from '../lib/axios.js';
 import Loading from '../components/Loading';
 
 const reducer = (state, action) => {

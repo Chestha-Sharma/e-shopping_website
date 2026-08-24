@@ -1,4 +1,4 @@
-import axiosInstance from '../lib/axios.js';
+import {axiosInstance} from '../lib/axios.js';
 import { useContext, useEffect, useReducer } from 'react';
 import { Card, Col, Row } from 'react-bootstrap';
 import Chart from 'react-google-charts';
