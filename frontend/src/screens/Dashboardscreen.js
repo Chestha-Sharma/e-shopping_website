@@ -1,10 +1,10 @@
-import {axiosInstance} from './lib/axios.js';
+import {axiosInstance} from '../lib/axios.js';
 import { useContext, useEffect, useReducer } from 'react';
 import { Card, Col, Row } from 'react-bootstrap';
 import Chart from 'react-google-charts';
-import Loading from '../components/Loading';
-import Msg from '../components/MassageBox';
-import { Store } from '../store';
+import Loading from '../components/Loading.js';
+import Msg from '../components/MassageBox.js';
+import { Store } from '../store.js';
 import { toast } from 'react-toastify';
 const reducer=(state,action)=>{
    switch(action.type){

@@ -1,13 +1,13 @@
-import {axiosInstance} from './lib/axios.js';
+import {axiosInstance} from '../lib/axios.js';
 import { useContext, useEffect, useReducer } from 'react';
 import { Badge, Button, Card, Col, ListGroup, Row } from 'react-bootstrap';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate, useParams } from 'react-router-dom';
-import Loading from '../components/Loading';
-import Msg from '../components/MassageBox';
-import Rating from '../components/Rating';
-import { Store } from '../store';
-import { geterror } from '../util';
+import Loading from '../components/Loading.js';
+import Msg from '../components/MassageBox.js';
+import Rating from '../components/Rating.js';
+import { Store } from '../store.js';
+import { geterror } from '../util.js';
 const reducer = (state, action) => {
   switch (action.type) {
     case 'FETCH_REQUEST': 

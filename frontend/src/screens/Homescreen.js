@@ -1,10 +1,10 @@
-import {axiosInstance} from './lib/axios.js';
+import {axiosInstance} from '../lib/axios.js';
 import { useEffect, useReducer } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { Helmet } from 'react-helmet-async'; 
-import Loading from '../components/Loading';
-import Msg from '../components/MassageBox';
-import Product from '../components/Product';
+import Loading from '../components/Loading.js';
+import Msg from '../components/MassageBox.js';
+import Product from '../components/Product.js';
 const reducer = (state, action) => {
   switch (action.type) {
     case 'FETCH_REQUEST': 

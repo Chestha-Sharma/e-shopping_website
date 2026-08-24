@@ -1,14 +1,14 @@
 import React from 'react'
 import { useContext ,useReducer } from 'react';
 import { useLocation ,Link, useNavigate } from 'react-router-dom';
-import { Store } from '../store';
+import { Store } from '../store.js';
 import { useEffect } from 'react';
-import {axiosInstance} from './lib/axios.js';
-import Loading from '../components/Loading';
-import Msg from '../components/MassageBox';
+import {axiosInstance} from '../lib/axios.js';
+import Loading from '../components/Loading.js';
+import Msg from '../components/MassageBox.js';
 import { Button, Col, Row } from 'react-bootstrap';
 import { toast } from 'react-toastify';
-import { geterror } from '../util';
+import { geterror } from '../util.js';
 
 
 const reducer = (state, action) => {

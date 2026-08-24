@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useReducer } from 'react'
 import { Helmet } from 'react-helmet-async'
-import Loading from '../components/Loading'
-import Msg from '../components/MassageBox'
+import Loading from '../components/Loading.js'
+import Msg from '../components/MassageBox.js'
 import { useNavigate } from 'react-router-dom';
-import { geterror } from '../util';
-import {axiosInstance} from './lib/axios.js';
+import { geterror } from '../util.js';
+import {axiosInstance} from '../lib/axios.js';
 import { Button } from 'react-bootstrap';
-import { Store } from '../store';
+import { Store } from '../store.js';
 
 
 const reducer = (state, action) => {

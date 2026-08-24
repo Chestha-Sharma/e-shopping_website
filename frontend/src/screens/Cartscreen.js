@@ -1,9 +1,9 @@
-import {axiosInstance} from './lib/axios.js';
+import {axiosInstance} from '../lib/axios.js';
 import { useContext } from 'react';
 import { Button, Card, Col, ListGroup } from 'react-bootstrap';
 import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate } from 'react-router-dom';
-import { Store } from '../store'; 
+import { Store } from '../store.js'; 
 export default function CartScreen() {
   const navigate = useNavigate();
   const { state, dispatch: ctxDispatch } = useContext(Store);

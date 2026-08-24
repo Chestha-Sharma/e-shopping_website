@@ -2,10 +2,10 @@ import React, { useEffect } from 'react'
 import { useState } from 'react';
 import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Store } from '../store';
+import { Store } from '../store.js';
 import {Button, Form} from 'react-bootstrap';
 import {Helmet} from 'react-helmet-async';
-import Checkoutsteps from '../components/Checkoutsteps';
+import Checkoutsteps from '../components/Checkoutsteps.js';
 import { toast } from 'react-toastify';
 export default function Paymentmethodscreen() {
     const navigate = useNavigate();

@@ -1,8 +1,8 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import {axiosInstance} from './lib/axios.js';
+import {axiosInstance} from '../lib/axios.js';
 import { toast } from 'react-toastify';
-import { geterror } from '../util';
+import { geterror } from '../util.js';
 import { Helmet } from 'react-helmet-async';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';

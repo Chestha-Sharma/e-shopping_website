@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { Navigate } from 'react-router-dom'
-import { Store } from '../store';
+import { Store } from '../store.js';
 
 export default function Protectedroter({children}) {
     const {state} = useContext(Store);

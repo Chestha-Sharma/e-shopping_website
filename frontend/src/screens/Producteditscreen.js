@@ -1,10 +1,10 @@
 import React, { useContext, useReducer, useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Store } from '../store';
-import { geterror } from '../util';
-import Loading from '../components/Loading';
-import Msg from '../components/MassageBox';
-import {axiosInstance} from './lib/axios.js';
+import { Store } from '../store.js';
+import { geterror } from '../util.js';
+import Loading from '../components/Loading.js';
+import Msg from '../components/MassageBox.js';
+import {axiosInstance} from '../lib/axios.js';
 import { toast } from 'react-toastify';
 import { Container, Form, Button } from 'react-bootstrap';
 import { Helmet } from 'react-helmet-async';

@@ -8,7 +8,7 @@ import { geterror } from '../util';
 import { toast } from 'react-toastify';
 import Loading from '../components/Loading';
 import Msg from '../components/MassageBox';
-import {axiosInstance}  from './lib/axios.js';
+import {axiosInstance}  from '../lib/axios.js';
 import { Button, Container, Form } from 'react-bootstrap';
 import { Helmet } from 'react-helmet-async';
 import { useReducer } from 'react';
