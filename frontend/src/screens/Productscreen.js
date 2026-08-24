@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axiosInstance from '../lib/axios.js';
 import { useContext, useEffect, useReducer } from 'react';
 import { Badge, Button, Card, Col, ListGroup, Row } from 'react-bootstrap';
 import { Helmet } from 'react-helmet-async';
@@ -33,7 +33,7 @@ function ProductScreen() {
     const fetchData = async () => {
       dispatch({ type: 'FETCH_REQUEST' });
       try {
-        const result = await axios.get(`/api/products/slug/${slug}`);
+        const result = await axiosInstance.get(`/api/products/slug/${slug}`);
         dispatch({ type: 'FETCH_SUCCESS', payload: result.data });
       } catch (err) {
         dispatch({ type: 'FETCH_FAIL', payload: geterror(err) }); // ye kaam kiya kyoki yaha 404 status wali error aayegi jab product nahi milega to uske liye geterror function use kiya hai jo ki util.js me define hai aur wo function error message ko handle karega aur agar backend se message aata hai to wo message show karega aur agar backend se message nahi aata hai to wo generic error message show karega.
@@ -47,7 +47,7 @@ function ProductScreen() {
     const existItem = cart.cartItems.find((x) => x._id === product._id);
     const quantity = existItem ? existItem.quantity + 1 : 1;  
     try {
-    const { data } = await axios.get(`/api/products/${product._id}`);
+    const { data } = await axiosInstance.get(`/api/products/${product._id}`);
     } catch (error) {
         console.log(error);
     }

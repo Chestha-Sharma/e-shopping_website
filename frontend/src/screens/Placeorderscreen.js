@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { ListGroup } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { geterror } from '../util';
-import axios from 'axios';
+import axiosInstance from '../lib/axios.js';
 import Loading from '../components/Loading';
 
 const reducer = (state, action) => {
@@ -45,7 +45,7 @@ export default function Placeorderscreen() {
         try{
           console.log("User Info Status:", userInfo);
             dispatch({type:'CREATE_REQUEST'});
-            const {data} = await axios.post('/api/order',{
+            const {data} = await axiosInstance.post('/api/order',{
                  orderItems : cart.cartItems,
                  shippingAddress : cart.shippingAddress,
                  paymentMethod : cart.paymentMethod,
@@ -60,7 +60,7 @@ export default function Placeorderscreen() {
                 }  
             }
           );
-           await axios.put('/api/users/update-cart', {
+           await axiosInstance.put('/api/users/update-cart', {
       userId: userInfo._id,
       cartItems: []
     }, {

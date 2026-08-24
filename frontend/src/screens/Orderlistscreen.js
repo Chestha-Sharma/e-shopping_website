@@ -7,7 +7,7 @@ import { useEffect } from 'react';
 import { geterror } from '../util';
 import Loading from '../components/Loading';
 import Msg from '../components/MassageBox';
-import axios from 'axios';
+import axiosInstance from '../lib/axios.js';
 import { Button } from 'react-bootstrap';
 import { Helmet } from 'react-helmet-async';
 
@@ -46,7 +46,7 @@ export default function Orderlistscreen() {
     const fetchData = async ()=>{
       try{
         dispatch({type : 'FETCH_REQUEST'});
-        const {data} = await axios.get('/api/order',{
+        const {data} = await axiosInstance.get('/api/order',{
           headers : {
             authorization : `Bearer ${userInfo.token}`
           }

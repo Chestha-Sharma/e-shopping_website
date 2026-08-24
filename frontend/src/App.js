@@ -17,7 +17,7 @@ import Orderscreen from "./screens/Orderscreen";
 import Orderhistoryscreen from "./screens/Orderhistoryscreen";
 import Profilescreen from "./screens/Profilescreen";
 import { geterror } from "./util";
-import axios from "axios";
+import axiosInstance from "./lib/axios.js";
 import Searchbox from "./components/Searchbox";
 import Searchscreen from "./screens/Searchscreen";
 import Protectedrouter from "./components/Protectedrouter";
@@ -28,6 +28,7 @@ import Producteditscreen from "./screens/Producteditscreen";
 import Orderlistscreen from "./screens/Orderlistscreen";
 import Userlistscreen from "./screens/Userlistscreen";
 import Usereditscreen from "./screens/Usereditscreen";
+import { axiosInstance } from "./lib/axios";
 function App() {
    const {state , dispatch : ctxdispatch} = useContext(Store); 
    const navigate = useNavigate(); 
@@ -46,7 +47,7 @@ function App() {
  useEffect(()=>{
    const fetchCategories = async ()=>{
     try{
-     const {data} = await axios.get('/api/products/categories');
+     const {data} = await axiosInstance.get('/api/products/categories');
      setCategories(data);
      setCategories(data);
     }

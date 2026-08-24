@@ -4,7 +4,7 @@ import { Store } from '../store';
 import { geterror } from '../util';
 import Loading from '../components/Loading';
 import Msg from '../components/MassageBox';
-import axios from 'axios';
+import axiosInstance from '../lib/axios.js';
 import { toast } from 'react-toastify';
 import { Container, Form, Button } from 'react-bootstrap';
 import { Helmet } from 'react-helmet-async';
@@ -73,7 +73,7 @@ export default function Producteditscreen() {
         const fetchProduct = async ()=>{
         try{
              dispatch({type : 'FETCH_REQUEST'});
-             const {data} = await axios.get(`/api/products/${productId}`);
+             const {data} = await axiosInstance.get(`/api/products/${productId}`);
              setName(data.name);
              setSlug(data.slug);
              setDescription(data.description);
@@ -98,7 +98,7 @@ export default function Producteditscreen() {
     bodyFormData.append('file', file);
     try {
       dispatch({ type: 'UPLOAD_REQUEST' });
-      const { data } = await axios.post('/api/upload', bodyFormData, {
+      const { data } = await axiosInstance.post('/api/upload', bodyFormData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           authorization: `Bearer ${userInfo.token}`,
@@ -119,7 +119,7 @@ export default function Producteditscreen() {
            e.preventDefault();
            try{
                dispatch({type : 'UPDATE_REQUEST'});
-               const {data} = await axios.put(`/api/products/${productId}`,{
+               const {data} = await axiosInstance.put(`/api/products/${productId}`,{
                    name,
                    slug,
                    description,

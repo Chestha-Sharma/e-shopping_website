@@ -7,7 +7,7 @@ import { useContext } from 'react';
 import { Store } from '../store';
 import { useEffect } from 'react';
 import { geterror } from '../util';
-import axios from 'axios';
+import axiosInstance from '../lib/axios.js';
 import { Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -55,7 +55,7 @@ export default function Userlistscreen() {
     const fetchData = async () => {
       try {
         dispatch({ type: 'FETCH_REQUEST' });
-        const { data } = await axios.get(`/api/users`, {
+        const { data } = await axiosInstance.get(`/api/users`, {
           headers: { authorization: `Bearer ${userInfo.token}` },
         });
         dispatch({ type: 'FETCH_SUCCESS', payload: data });
@@ -78,7 +78,7 @@ export default function Userlistscreen() {
        if(window.confirm('Are you sure you want to delete this user?')){
         try{
             dispatch({type : 'DELETE_REQUEST'});
-            await axios.delete(`/api/users/${user._id}`,{
+            await axiosInstance.delete(`/api/users/${user._id}`,{
                 headers : {
                     authorization : `Bearer ${userInfo.token}`
                 }

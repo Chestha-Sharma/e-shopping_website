@@ -1,4 +1,4 @@
-import axios from "axios";
+import axiosInstance from "../lib/axios.js";
 import { useContext } from "react";
 import { Button, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
@@ -15,7 +15,7 @@ function Product(props) {
    const addtocarthandler = async (item) => {
     const existItem = cartItems.find((x) => x._id === product._id);
     const quantity = existItem ? existItem.quantity + 1 : 1;  
-    const { data } = await axios.get(`/api/products/${item._id}`);
+    const { data } = await axiosInstance.get(`/api/products/${item._id}`);
     if (data.countInStock < quantity) {
       toast.error("Sorry product is out of stock")
       return;

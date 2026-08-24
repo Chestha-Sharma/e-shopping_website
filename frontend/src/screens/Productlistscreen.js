@@ -3,7 +3,7 @@ import { useContext ,useReducer } from 'react';
 import { useLocation ,Link, useNavigate } from 'react-router-dom';
 import { Store } from '../store';
 import { useEffect } from 'react';
-import axios from 'axios';
+import axiosInstance from '../lib/axios.js';
 import Loading from '../components/Loading';
 import Msg from '../components/MassageBox';
 import { Button, Col, Row } from 'react-bootstrap';
@@ -71,7 +71,7 @@ export default function Productlistscreen() {
         const fetchData = async ()=>{
             try{
                 dispatch({type : 'FETCH_REQUEST'});
-              const { data } = await axios.get(`/api/products/search?page=${filterpage}`,{
+              const { data } = await axiosInstance.get(`/api/products/search?page=${filterpage}`,{
                 headers:{
                     authorization : `Bearer ${userInfo.token}`
                 }
@@ -93,7 +93,7 @@ export default function Productlistscreen() {
        
         try{
             dispatch({type : 'CREATE_REQUEST'});
-            const {data} = await axios.post('/api/products',{},{
+            const {data} = await axiosInstance.post('/api/products',{},{
                     headers:{
                         authorization : `Bearer ${userInfo.token}`
                     } 
@@ -113,7 +113,7 @@ export default function Productlistscreen() {
        if(window.confirm('Are you sure you want to delete this product?')){
         try{
             dispatch({type : 'DELETE_REQUEST'});
-           await axios.delete(`/api/products/${product._id}`,{
+           await axiosInstance.delete(`/api/products/${product._id}`,{
                headers:{
                    authorization : `Bearer ${userInfo.token}`
                }

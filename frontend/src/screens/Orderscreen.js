@@ -4,7 +4,7 @@ import Msg from '../components/MassageBox';
 import { useReducer, useEffect, useContext } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { geterror } from '../util';
-import axios from 'axios';
+import axiosInstance from '../lib/axios.js';
 import { Helmet } from 'react-helmet-async';
 import { Button, Card, Col, ListGroup, Row } from 'react-bootstrap';
 import { Store } from '../store';
@@ -81,7 +81,7 @@ export default function Orderscreen() {
         return actions.order.capture().then(async function (details) {
             try {
                 dispatch({ type: 'PAY_REQUEST' });
-                const { data } = await axios.put(`/api/order/${orderId}/pay`, details, {
+                const { data } = await axiosInstance.put(`/api/order/${orderId}/pay`, details, {
                     headers: {
                         authorization: `Bearer ${userInfo.token}`
                     } 
@@ -103,7 +103,7 @@ export default function Orderscreen() {
         const fetchOrder = async () => {
             try {
                 dispatch({ type: 'FETCH_REQUEST' });
-                const { data } = await axios.get(`/api/order/${orderId}`, {
+                const { data } = await axiosInstance.get(`/api/order/${orderId}`, {
                     headers: {
                         'Authorization': `Bearer ${userInfo.token}`
                     }
@@ -129,7 +129,7 @@ export default function Orderscreen() {
         } else {
             const loadPaypalScript = async () => {
                 try {
-                    const { data: clientId } = await axios.get('/api/keys/paypal', {
+                    const { data: clientId } = await axiosInstance.get('/api/keys/paypal', {
                         headers: {
                             authorization: `Bearer ${userInfo.token}`
                         }
@@ -157,8 +157,8 @@ export default function Orderscreen() {
     async function deliverorderHandler(){
         try{
             dispatch({ type: 'DELIVER_REQUEST' });
-            const {data} = await axios.put(`/api/order/${orderId}/deliver`,{}, {
-                // वह खाली ऑब्जेक्ट {} रिक्वेस्ट बॉडी (Request Body) के लिए है।जब आप axios.put या axios.post का इस्तेमाल करते हैं, तो सिंटैक्स का नियम (Structure) कुछ इस तरह होता है:$$\text{axios.put}(\text{url}, \text{data}, \text{config})$$
+            const {data} = await axiosInstance.put(`/api/order/${orderId}/deliver`,{}, {
+                // वह खाली ऑब्जेक्ट {} रिक्वेस्ट बॉडी (Request Body) के लिए है।जब आप axiosInstance.put या axiosInstance.post का इस्तेमाल करते हैं, तो सिंटैक्स का नियम (Structure) कुछ इस तरह होता है:$$\text{axiosInstance.put}(\text{url}, \text{data}, \text{config})$$
                 headers: {
                     authorization: `Bearer ${userInfo.token}`
                 }

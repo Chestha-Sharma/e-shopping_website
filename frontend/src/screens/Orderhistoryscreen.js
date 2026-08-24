@@ -4,7 +4,7 @@ import Loading from '../components/Loading'
 import Msg from '../components/MassageBox'
 import { useNavigate } from 'react-router-dom';
 import { geterror } from '../util';
-import axios from 'axios';
+import axiosInstance    from '../lib/axios.js';
 import { Button } from 'react-bootstrap';
 import { Store } from '../store';
 
@@ -33,7 +33,7 @@ export default function Orderhistoryscreen() {
          const fetchData = async ()=>{
             dispatch({ type: 'FETCH_REQUEST' });
             try {
-                const { data } = await axios.get(
+                const { data } = await axiosInstance    .get(
                     '/api/order/mine',
                     {
                         headers : {authorization : `Bearer ${userInfo.token}`}

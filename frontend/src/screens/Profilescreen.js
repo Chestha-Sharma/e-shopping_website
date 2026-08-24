@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import { Button, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import { geterror } from '../util';
-import axios from 'axios';
+import axiosInstance from '../lib/axios.js';
 const reducer = (state, action) => {
     switch (action.type) {
         case 'UPDATE_REQUEST':
@@ -37,7 +37,7 @@ export default function Profilescreen() {
         }
          try{
             dispatch({type : 'UPDATE_REQUEST'});
-            const {data}= await axios.put('/api/users/profile',{  
+            const {data}= await axiosInstance.put('/api/users/profile',{  
                 name,
                 email,
                 password

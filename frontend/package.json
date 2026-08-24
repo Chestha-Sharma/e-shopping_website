@@ -1,6 +1,5 @@
 {
-  "name": "frontend",
-  "proxy": "https://e-shopping-website-b581.onrender.com",
+  "name": "frontend", 
   "version": "0.1.0",
   "private": true,
   "dependencies": {

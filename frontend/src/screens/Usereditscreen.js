@@ -8,7 +8,7 @@ import { geterror } from '../util';
 import { toast } from 'react-toastify';
 import Loading from '../components/Loading';
 import Msg from '../components/MassageBox';
-import axios from 'axios';
+import axiosInstance  from '../lib/axios.js';
 import { Button, Container, Form } from 'react-bootstrap';
 import { Helmet } from 'react-helmet-async';
 import { useReducer } from 'react';
@@ -55,7 +55,7 @@ export default function Usereditscreen() {
         const fetchUser = async () => {
             try {
                 dispatch({ type: 'FETCH_REQUEST' });
-                const { data } = await axios.get(`/api/users/${userId}`,{
+                const { data } = await axiosInstance  .get(`/api/users/${userId}`,{
                     headers: {
                         authorization: `Bearer ${userInfo.token}`
                     }
@@ -75,7 +75,7 @@ export default function Usereditscreen() {
         e.preventDefault();
         try {
             dispatch({ type: 'UPDATE_REQUEST' });
-            const { data } = await axios.put(`/api/users/${userId}`, {
+            const { data } = await axiosInstance  .put(`/api/users/${userId}`, {
                 name,
                 email,
                 isAdmin

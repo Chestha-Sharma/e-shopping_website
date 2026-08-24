@@ -1,12 +1,12 @@
  
 import { createContext, useReducer } from 'react';
-import axios from 'axios';
+import axiosInstance from './lib/axios.js';
 
 export const Store = createContext(); 
 const syncCartWithDB = async (userInfo, cartItems) => {
   if (userInfo && userInfo._id) {
     try {
-      await axios.put('/api/users/update-cart', {
+      await axiosInstance.put('/api/users/update-cart', {
         userId: userInfo._id,
         cartItems: cartItems
       }, {

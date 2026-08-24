@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axiosInstance from '../lib/axios.js';
 import { useContext } from 'react';
 import { Button, Card, Col, ListGroup } from 'react-bootstrap';
 import { Helmet } from 'react-helmet-async';
@@ -11,7 +11,7 @@ export default function CartScreen() {
     cart: { cartItems },
   } = state;
   const updatecarthandler = async (item, quantity) => {
-    const { data } = await axios.get(`/api/products/${item._id}`);
+    const { data } = await axiosInstance.get(`/api/products/${item._id}`);
     if (data.countInStock < quantity) {
       window.alert('Sorry. Product is out of stock');
       return;

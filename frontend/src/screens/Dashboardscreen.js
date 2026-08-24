@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axiosInstance from '../lib/axios.js';
 import { useContext, useEffect, useReducer } from 'react';
 import { Card, Col, Row } from 'react-bootstrap';
 import Chart from 'react-google-charts';
@@ -35,7 +35,7 @@ export default function Dashboardscreen() {
     useEffect(()=>{
          const fetchData = async ()=>{
             try{
-           const {data} = await axios.get('/api/order/summary',{
+           const {data} = await axiosInstance.get('/api/order/summary',{
             headers : {
                 authorization : `Bearer ${userInfo.token}`
             }

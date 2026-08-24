@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axiosInstance from '../lib/axios.js';
 import { useEffect, useReducer } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import { Helmet } from 'react-helmet-async'; 
@@ -27,7 +27,7 @@ function HomeScreen() {
         const fetchData = async () => {
        dispatch({ type: 'FETCH_REQUEST' });
       try {
-        const result = await axios.get('/api/products');
+        const result = await axiosInstance.get('/api/products');
         dispatch({ type: 'FETCH_SUCCESS', payload: result.data });
       } catch (err) {
         dispatch({ type: 'FETCH_FAIL', payload: err.message });
