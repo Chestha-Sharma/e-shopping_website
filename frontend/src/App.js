@@ -27,8 +27,7 @@ import Productlistscreen from "./screens/Productlistscreen";
 import Producteditscreen from "./screens/Producteditscreen";
 import Orderlistscreen from "./screens/Orderlistscreen";
 import Userlistscreen from "./screens/Userlistscreen";
-import Usereditscreen from "./screens/Usereditscreen";
-import { axiosInstance } from "./lib/axios";
+import Usereditscreen from "./screens/Usereditscreen"; 
 function App() {
    const {state , dispatch : ctxdispatch} = useContext(Store); 
    const navigate = useNavigate(); 
