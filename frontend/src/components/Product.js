@@ -4,7 +4,7 @@ import { Button, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Store } from "../store.js";
-import Rating from "Rating.js";
+import Rating from "./Rating.js";
 
 function Product(props) {
   const { product } = props;
