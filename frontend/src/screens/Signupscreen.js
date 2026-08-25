@@ -74,8 +74,9 @@ export default function SignupScreen() {
     </div>
     <div className="mb-3">
      Already have an account?{' '}
-
-     <Link to={`/signin`}>Sign-In</Link>
+<Link to="/signin" className="fw-semibold text-decoration-none">
+        Sign In
+      </Link> 
     </div>
   </Form>
   </Container>
