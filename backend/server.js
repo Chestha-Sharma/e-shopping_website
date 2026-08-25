@@ -10,6 +10,11 @@ import uploadRouter from './routes/uploadrouter.js';
 
 const app = express();
  
+app.use(cors({
+  origin: 'https://e-shopping-website-rho.vercel.app',
+  credentials: true,
+}));
+
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true })); 
 dotenv.config(); 
@@ -34,10 +39,6 @@ app.get('/api/keys/paypal', (req, res) => {
 app.use((err, req, res, next) => {
    res.status(500).send({ message: err.message });   
 }); 
-app.use(cors({
-  origin: 'https://e-shopping-website-rho.vercel.app',
-  credentials: true,
-}));
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
 });
