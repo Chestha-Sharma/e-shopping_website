@@ -75,7 +75,7 @@ export default function SignupScreen() {
     <div className="mb-3">
      Already have an account?{' '}
 
-     <Link to={`/signup`}>Sign-In</Link>
+     <Link to={`/signin`}>Sign-In</Link>
     </div>
   </Form>
   </Container>
