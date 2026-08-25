@@ -50,7 +50,7 @@ export default function SignupScreen() {
     <title>Sign Up</title>
   </Helmet>
   <h1 className="my-3" >Sign Up</h1>
-  <Form onSubmit={submitHandler}>\
+  <Form onSubmit={submitHandler}>
     <Form.Group className="mb-3" controlId="name">
         <Form.Label>Name</Form.Label>
         <Form.Control type="name" placeholder="Enter name" required onChange={(e)=> setName(e.target.value)}/> 
@@ -75,7 +75,7 @@ export default function SignupScreen() {
     <div className="mb-3">
      Already have an account?{' '}
 
-     <Link to={`/signup?redirect=${redirect}`}>Sign-In</Link>
+     <Link to={`/signup`}>Sign-In</Link>
     </div>
   </Form>
   </Container>
