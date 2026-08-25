@@ -35,7 +35,7 @@ app.use((err, req, res, next) => {
    res.status(500).send({ message: err.message });   
 }); 
 app.use(cors({
-  ,
+  origin: 'https://e-shopping-website-rho.vercel.app',
   credentials: true,
 }));
 app.listen(PORT, () => {
