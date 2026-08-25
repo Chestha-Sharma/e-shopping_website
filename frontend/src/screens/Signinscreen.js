@@ -60,7 +60,10 @@ export default function SigninScreen() {
     <div className="mb-3">
      New Costomer?{' '}
 
-     <Link to={`/signup?redirect=${redirect}`}>Create your account</Link>
+     <Link to={`/signup?redirect=${redirect}`} className="fw-semibold text-decoration-none">
+       Create your account
+      </Link> 
+ 
     </div>
   </Form>
   </Container>
