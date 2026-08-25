@@ -6,16 +6,10 @@ import seedRouter from './routes/seedrouter.js';
 import productRouter from './routes/productrouter.js';
 import userRouter from './routes/userrouter.js';
 import orderRouter from './routes/orderrouter.js';
-import uploadRouter from './routes/uploadrouter.js'; 
-import { fileURLToPath } from 'url';
+import uploadRouter from './routes/uploadrouter.js';  
 
 const app = express();
-
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-
+ 
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true })); 
 dotenv.config(); 
@@ -36,14 +30,14 @@ app.use('/api/order', orderRouter);
 app.use('/api/upload', uploadRouter);
 app.get('/api/keys/paypal', (req, res) => {
   res.send(process.env.PAYPAL_CLIENT_ID || 'sb');
-}); 
-app.use(express.static(path.join(__dirname, '../frontend/build')));
-app.get('*any', (req, res) =>
-  res.sendFile(path.join(__dirname, '../frontend/build/index.html'))
-); 
+});  
 app.use((err, req, res, next) => {
    res.status(500).send({ message: err.message });   
 }); 
+app.use(cors({
+  ,
+  credentials: true,
+}));
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
 });
