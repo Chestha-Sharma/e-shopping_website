@@ -8,8 +8,7 @@ import { Store, StoreProvider } from './store';
 import { BrowserRouter } from 'react-router-dom';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode> 
+root.render( 
     <StoreProvider>
     <HelmetProvider>
       <BrowserRouter>
@@ -18,6 +17,5 @@ root.render(
       </PayPalScriptProvider>
       </BrowserRouter>
     </HelmetProvider>
-    </StoreProvider>
-  </React.StrictMode>
+    </StoreProvider> 
 );  
