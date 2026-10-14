@@ -7,6 +7,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { Store, StoreProvider } from './store';
 import { BrowserRouter } from 'react-router-dom';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
+import Footer from './components/Footer.js';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode> 
@@ -14,7 +15,7 @@ root.render(
     <HelmetProvider>
       <BrowserRouter>
       <PayPalScriptProvider deferLoading={true}>
-      <App />
+      <App /> 
       </PayPalScriptProvider>
       </BrowserRouter>
     </HelmetProvider>

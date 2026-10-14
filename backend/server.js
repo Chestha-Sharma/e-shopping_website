@@ -10,14 +10,14 @@ import uploadRouter from './routes/uploadrouter.js';
 
 const app = express();
  
+dotenv.config(); 
 app.use(cors({
-  origin: 'https://e-shopping-website-rho.vercel.app'||'http://localhost:3000',
+  origin: ['https://e-shopping-website-rho.vercel.app','http://localhost:3000'],
   credentials: true,
 }));
 
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true })); 
-dotenv.config(); 
 const connectdb = async () => {
   try {
     await mongoose.connect(process.env.MONGODB_URI);

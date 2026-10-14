@@ -1,243 +1,197 @@
-import { BrowserRouter ,Route,Routes ,Link, useNavigate } from "react-router-dom";
-import Homescreen from "./screens/Homescreen";
-import ProductScreen from "./screens/Productscreen";
+import { Link, useNavigate } from "react-router-dom";
 import { Badge, Button, Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { useContext, useEffect, useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { Store } from "./store";
-import CartScreen from "./screens/Cartscreen"; 
-import SigninScreen from "./screens/Signinscreen";
-import {toast, ToastContainer} from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import Shippingadressscreen from "./screens/Shippingadressscreen";
-import SignupScreen from "./screens/Signupscreen";
-import Paymentmethodscreen from "./screens/Paymentmethodscreen";
-import Placeorderscreen from "./screens/Placeorderscreen";
-import Orderscreen from "./screens/Orderscreen";
-import Orderhistoryscreen from "./screens/Orderhistoryscreen";
-import Profilescreen from "./screens/Profilescreen";
 import { geterror } from "./util";
 import { axiosInstance } from "./lib/axios.js";
 import Searchbox from "./components/Searchbox";
-import Searchscreen from "./screens/Searchscreen";
-import Protectedrouter from "./components/Protectedrouter";
-import Adminroute from "./components/Adminroute";
-import Dashboardscreen from "./screens/Dashboardscreen";
-import Productlistscreen from "./screens/Productlistscreen";
-import Producteditscreen from "./screens/Producteditscreen";
-import Orderlistscreen from "./screens/Orderlistscreen";
-import Userlistscreen from "./screens/Userlistscreen";
-import Usereditscreen from "./screens/Usereditscreen"; 
-function App() {
-   const {state , dispatch : ctxdispatch} = useContext(Store); 
-   const navigate = useNavigate(); 
- 
-   const {cart,userInfo} = state;
-   const handleSignOut = () => {
-    ctxdispatch({type : 'SIGNOUT'});
-    localStorage.removeItem('userInfo');
-    localStorage.removeItem('shippingAddress');
-    localStorage.removeItem('paymentMethod');
-    navigate('/signin');
-  }; 
+import Footer from "./components/Footer";
+import AppRoutes from "./Routes/AppRoutes.js";
 
- const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
- const [categories, setCategories] = useState([]);
- useEffect(()=>{
-   const fetchCategories = async ()=>{
-    try{
-     const {data} = await axiosInstance.get('/api/products/categories');
-     setCategories(data);
-     setCategories(data);
-    }
-    catch(error){
-       toast.error(geterror(error));
-    }
-   }
-   fetchCategories();
- }, []);
+function App() {
+  const { state, dispatch: ctxdispatch } = useContext(Store);
+  const navigate = useNavigate();
+  const { cart, userInfo } = state;
+
+  const handleSignOut = () => {
+    ctxdispatch({ type: "SIGNOUT" });
+    localStorage.removeItem("userInfo");
+    localStorage.removeItem("shippingAddress");
+    localStorage.removeItem("paymentMethod");
+    navigate("/signin");
+  };
+
+  const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const { data } = await axiosInstance.get("/api/products/categories");
+        setCategories(data);
+      } catch (error) {
+        toast.error(geterror(error));
+      }
+    };
+    fetchCategories();
+  }, []);
+
   return (
-    <div> 
-     <div className={sidebarIsOpen?
-     "d-flex flex-column site-container active-cont"
-      :"d-flex flex-column site-container"
-      }>
-      <ToastContainer position="bottom-center" limit={1}/>
-      <header>
-        <Navbar bg="dark" variant="dark" expand="lg"> 
-          <Container>
-            <Button
-            variant="dark"
-            onClick={()=>setSidebarIsOpen(!sidebarIsOpen)}
-            >
-              <i className="fas fa-bars"></i>
-            </Button>
-            <LinkContainer to="/">
-            <Navbar.Brand href="#home">Amaozona</Navbar.Brand> 
-            </LinkContainer>
-            <Navbar.Toggle aria-controls="basic-navbar-nav" />
-            <Navbar.Collapse id="basic-navbar-nav"> 
+   <div>
+  <div
+    className={
+      sidebarIsOpen
+        ? "d-flex flex-column site-container active-cont"
+        : "d-flex flex-column site-container"
+    }
+  >
+    <ToastContainer position="bottom-center" limit={1} />
+ 
+    <header className="site-header">
+      <Navbar variant="dark" expand="lg" className="main-navbar py-2">
+        <Container>
+          <Button
+            variant="link"
+            className="menu-btn"
+            aria-label="Menu"
+            onClick={() => setSidebarIsOpen(!sidebarIsOpen)}
+          >
+            <i className="fas fa-bars"></i>
+          </Button>
+
+          <LinkContainer to="/">
+            <Navbar.Brand className="brand">
+              <i className="fas fa-shopping-bag me-2"></i>Amaozona
+            </Navbar.Brand>
+          </LinkContainer>
+
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <div className="search-wrap">
               <Searchbox />
-            <Nav className="me-auto w-100 justify-content-end">
-              <Link to="/cart" className="nav-link">
-              Cart
-              {cart.cartItems.length > 0 && (
-                <Badge pill bg="danger">
-                  {cart.cartItems.reduce((a,c) => a + c.quantity, 0)}
-                </Badge>
-              )}
+            </div>
+
+            <Nav className="ms-auto align-items-lg-center gap-lg-2">
+              <Link to="/cart" className="nav-link cart-link">
+                <i className="fas fa-shopping-cart me-1"></i> Cart
+                {cart.cartItems.length > 0 && (
+                  <Badge pill bg="danger">
+                    {cart.cartItems.reduce((a, c) => a + c.quantity, 0)}
+                  </Badge>
+                )}
               </Link>
+
               {userInfo ? (
-                <NavDropdown title={userInfo.name} id="basic-nav-dropdown">
+                <NavDropdown
+                  align="end"
+                  id="basic-nav-dropdown"
+                  title={
+                    <span>
+                      <i className="fas fa-user-circle me-1"></i>
+                      {userInfo.name}
+                    </span>
+                  }
+                >
                   <LinkContainer to="/profile">
-                  <NavDropdown.Item>
-                     Your Profile
-                  </NavDropdown.Item>
+                    <NavDropdown.Item>
+                      <i className="fas fa-user me-2"></i>Your Profile
+                    </NavDropdown.Item>
                   </LinkContainer>
                   <LinkContainer to="/orderhistory">
-                  <NavDropdown.Item>
-                     Order History
-                  </NavDropdown.Item>
+                    <NavDropdown.Item>
+                      <i className="fas fa-box me-2"></i>Order History
+                    </NavDropdown.Item>
                   </LinkContainer>
-                  <Link
-                  className="dropdown-item"
-                  to="#signout"
-                  onClick={handleSignOut}
-                  >
-                  Sign Out
+                  <NavDropdown.Divider />
+                  <Link className="dropdown-item" to="#signout" onClick={handleSignOut}>
+                    <i className="fas fa-sign-out-alt me-2"></i>Sign Out
                   </Link>
                 </NavDropdown>
               ) : (
-                <Link className="nav-link" to="/signin">
-                Sign In
+                <Link className="btn btn-warning btn-sm fw-semibold px-3" to="/signin">
+                  Sign In
                 </Link>
               )}
-              {
-                userInfo && userInfo.isAdmin ? (
-                  <NavDropdown title="Admin" id="admin-nav-dropdown">
-                    <LinkContainer to="/admin/dashboard">
-                      <NavDropdown.Item>
-                        Dashboard
-                      </NavDropdown.Item>
-                    </LinkContainer>
-                    <LinkContainer to="/admin/products">
-                      <NavDropdown.Item>
-                        Products
-                      </NavDropdown.Item>
-                    </LinkContainer>
-                    <LinkContainer to="/admin/orders">
-                      <NavDropdown.Item>
-                        Orders
-                      </NavDropdown.Item>
-                    </LinkContainer>
-                    <LinkContainer to="/admin/users"> 
-                      <NavDropdown.Item>
-                        Users 
-                      </NavDropdown.Item>
-                    </LinkContainer>
-                  </NavDropdown>
-                ) : null
-              }
-            </Nav> 
-            </Navbar.Collapse>
-          </Container>
-        </Navbar>
+
+              {userInfo && userInfo.isAdmin && (
+                <NavDropdown title="Admin" id="admin-nav-dropdown" align="end">
+                  <LinkContainer to="/admin/dashboard">
+                    <NavDropdown.Item>
+                      <i className="fas fa-chart-line me-2"></i>Dashboard
+                    </NavDropdown.Item>
+                  </LinkContainer>
+                  <LinkContainer to="/admin/products">
+                    <NavDropdown.Item>
+                      <i className="fas fa-tags me-2"></i>Products
+                    </NavDropdown.Item>
+                  </LinkContainer>
+                  <LinkContainer to="/admin/orders">
+                    <NavDropdown.Item>
+                      <i className="fas fa-receipt me-2"></i>Orders
+                    </NavDropdown.Item>
+                  </LinkContainer>
+                  <LinkContainer to="/admin/users">
+                    <NavDropdown.Item>
+                      <i className="fas fa-users me-2"></i>Users
+                    </NavDropdown.Item>
+                  </LinkContainer>
+                </NavDropdown>
+              )}
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+    </header>
  
-      </header>
-      <div className={sidebarIsOpen?
-        "site-navbar active-nav d-flex justify-content-between flex-column flex-wrap"
-        :"site-navbar d-flex justify-content-between flex-column flex-wrap"}>
-          <Nav className="flex-column text-white w-100 p-2">
-            <Nav.Item>
-              <strong>Categories</strong>
-              {
-              categories.map((category) => (
-                 <Nav.Item key={category}>
-                   <Nav.Link
-                     as={Link}
-                     to={`/search?category=${category}&query=all&price=all&rating=all&order=newest&page=1`}
-                     onClick={() => setSidebarIsOpen(false)}
-                   >
-                     {category}
-                   </Nav.Link>
-                 </Nav.Item>
-               ))
-               }
-            </Nav.Item>
-          </Nav>
+    <div
+      className={
+        sidebarIsOpen
+          ? "site-navbar active-nav d-flex flex-column"
+          : "site-navbar d-flex flex-column"
+      }
+    >
+      <div className="sidebar-head d-flex justify-content-between align-items-center">
+        <span><i className="fas fa-th-large me-2"></i>Categories</span>
+        <button className="sidebar-close" onClick={() => setSidebarIsOpen(false)} aria-label="Close">
+          <i className="fas fa-times"></i>
+        </button>
       </div>
-     <main>
-      <Container className="mt-3">
-      <Routes>
-        <Route path="/cart" element={<CartScreen />} />
-        <Route path="/search" element={<Searchscreen />} />
-        <Route path="/signin" element={<SigninScreen />} />
-        <Route path="/signup" element={<SignupScreen />} />
-        <Route path="/profile" element={
-          <Protectedrouter>
-          < Profilescreen />
-          </Protectedrouter>
-          } />
-        <Route path="/shipping" element={<Shippingadressscreen />} />
-        <Route path="/payment" element={<Paymentmethodscreen />} />
-        <Route path="/placeorder" element={<Placeorderscreen />} />
-        <Route path="/order/:id" element={
-          <Protectedrouter>
-          <Orderscreen />
-          </Protectedrouter>
-        }  /> 
-        <Route path="/orderhistory" element={
-          <Protectedrouter>
-          <Orderhistoryscreen />
-          </Protectedrouter>
-          } />
-        <Route path="/product/:slug" element={<ProductScreen />} />  
-         {/* Rotes for admin */}
-         <Route path="/admin/dashboard" element={
-          <Adminroute>
-            <Dashboardscreen />
-          </Adminroute>
-          }  
-           />
-         <Route path="/admin/products" element={
-          <Adminroute>
-            <Productlistscreen />
-          </Adminroute>
-          }  
-           />
-           <Route path="/admin/product/:id" element={
-            <Adminroute>
-              <Producteditscreen />
-            </Adminroute>
-            }
-            />
-            <Route path="/admin/orders" element={
-            <Adminroute>
-              <Orderlistscreen />
-            </Adminroute>
-            }
-            /> 
-            <Route path="/admin/users" element={
-            <Adminroute>
-              <Userlistscreen />
-            </Adminroute>
-            }
-            />
-            <Route path="/admin/user/:id" element={
-            <Adminroute>
-              <Usereditscreen />
-            </Adminroute>
-            }
-            />
-        <Route path="/" element={<Homescreen />} />
-      </Routes>
-      </Container>
-     </main>
-     <footer>
-      <div className="text-center">Footer Content</div>
-     </footer>
+
+      <Nav className="flex-column p-2">
+        <Nav.Link
+          as={Link}
+          className="sidebar-link"
+          to="/search?category=all&query=all&price=all&rating=all&order=newest&page=1"
+          onClick={() => setSidebarIsOpen(false)}
+        >
+          All Products <i className="fas fa-chevron-right"></i>
+        </Nav.Link>
+        {categories.map((category) => (
+          <Nav.Link
+            key={category}
+            as={Link}
+            className="sidebar-link"
+            to={`/search?category=${category}&query=all&price=all&rating=all&order=newest&page=1`}
+            onClick={() => setSidebarIsOpen(false)}
+          >
+            {category} <i className="fas fa-chevron-right"></i>
+          </Nav.Link>
+        ))}
+      </Nav>
     </div>
-    </div> 
+ 
+    <main className="flex-grow-1">
+      <Container className="mt-3">
+        <AppRoutes />
+      </Container>
+    </main>
+
+    <Footer />
+  </div>
+</div>
   );
 }
 
