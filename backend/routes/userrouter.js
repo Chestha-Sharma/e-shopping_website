@@ -20,8 +20,7 @@ userRouter.put('/profile', isAuth, expressAsyncHandler(async (req, res) => {
        name: updatedUser.name,
        email: updatedUser.email,
        isAdmin: updatedUser.isAdmin,
-       token: generateToken(updatedUser),
-       cartItems: updatedUser.cartItems
+       token: generateToken(updatedUser)
      });
    } else {
      res.status(404).send({ message: 'User not found' });
@@ -41,34 +40,21 @@ userRouter.post(
           name : user.name,
           email : user.email,
           isAdmin : user.isAdmin,
-          token : generateToken(user),
-          cartItems: user.cartItems
+          token : generateToken(user)
         });
         return;
         }
       }
       res.status(401).json( {message : 'Invalid Credentials'});
   })
-); 
-userRouter.put('/update-cart', isAuth, expressAsyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id);
-  if (user) {
-    user.cartItems = req.body.cartItems;
-    await user.save();
-    res.send({ message: 'Cart updated successfully' });
-  } else {
-    res.status(404).send({ message: 'User not found' });
-  }
-}));
-
+);
 
 userRouter.post('/signup', expressAsyncHandler(async (req, res) => {
 const newUser = new User({
   name : req.body.name,
   email : req.body.email, 
   password : bcrypt.hashSync(req.body.password, 10),
-  isAdmin : false,
-  cartItems: []
+  isAdmin : false
 });
 const createdUser = await newUser.save();  
 res.send({
@@ -76,8 +62,7 @@ res.send({
           name : createdUser.name,
           email : createdUser.email,
           isAdmin :  createdUser.isAdmin,
-          token : generateToken(createdUser),
-          cartItems: createdUser.cartItems
+          token : generateToken(createdUser)
         });
 }));
 
