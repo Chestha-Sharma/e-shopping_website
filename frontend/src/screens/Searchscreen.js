@@ -34,20 +34,11 @@ const reducer = (state, action) => {
 };
 
 const prices = [
-  {
-    name: '1 to 50',
-    value: '1-50',
-  },
-  {
-    name: '51 to 200',
-    value: '51-200',
-  },
-  {
-    name: '201 to 1000',
-    value: '201-1000',
-  },
+  { name: '₹1 to ₹1,000', value: '1-1000' },
+  { name: '₹1,001 to ₹5,000', value: '1001-5000' },
+  { name: '₹5,001 to ₹20,000', value: '5001-20000' },
+  { name: '₹20,001 to ₹2,00,000', value: '20001-200000' },
 ];
-
 export const ratings = [
   {
     name: '4stars & up',
@@ -132,7 +123,7 @@ const getFilterUrl = (filter) => {
         <title>Search Products</title>
       </Helmet>
       <Row>
-        <Col md={3}>
+        <Col md={3} className='filter-panel'>
           <h3>Department</h3>
           <div>
             <ul>
@@ -258,7 +249,7 @@ const getFilterUrl = (filter) => {
 
               <Row>
                 {products.map((product) => (
-                  <Col sm={6} lg={4} className="mb-3" key={product._id}>
+                  <Col sm={6} lg={3} className="mb-3" key={product._id}>
                     <Product product={product}></Product>
                   </Col>
                 ))}
