@@ -11,7 +11,7 @@ import uploadRouter from './routes/uploadrouter.js';
 const app = express();
  
 app.use(cors({
-  origin: 'https://e-shopping-website-rho.vercel.app',
+  origin: 'https://e-shopping-website-rho.vercel.app'||'http://localhost:3000',
   credentials: true,
 }));
 
