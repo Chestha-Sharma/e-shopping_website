@@ -69,7 +69,7 @@ productRouter.delete('/:id', isAuth, isAdmin, expressAsyncHandler(async (req, re
 
 
 
-const PAGE_SIZE = 3;
+const PAGE_SIZE = 12;
 
 
 productRouter.get('/admin' , isAuth ,isAdmin, expressAsyncHandler (async (req, res) => {
