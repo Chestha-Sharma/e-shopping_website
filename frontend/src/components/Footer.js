@@ -9,11 +9,17 @@ const features = [
   { icon: '🔒', title: 'Secure Payment', text: '100% safe checkout' },
   { icon: '🎧', title: '24/7 Support', text: 'We are here to help' },
 ];
-
 const shopLinks = [
   { label: 'All Products', to: '/search' },
-  { label: 'Shirts', to: '/search?category=Shirts' },
-  { label: 'Pants', to: '/search?category=Pants' },
+  { label: 'Beauty', to: '/search?category=Beauty' },
+  { label: 'Fragrances', to: '/search?category=Fragrances' },
+  { label: 'Furniture', to: '/search?category=Furniture' },
+  { label: 'Groceries', to: '/search?category=Groceries' },
+  { label: 'Home Decoration', to: '/search?category=Home%20Decoration' },
+  { label: 'Kitchen Accessories', to: '/search?category=Kitchen%20Accessories' },
+  { label: 'Laptops', to: '/search?category=Laptops' },
+  { label: "Men's Shirts", to: '/search?category=Mens%20Shirts' },
+  { label: "Men's Shoes", to: '/search?category=Mens%20Shoes' },
   { label: 'My Cart', to: '/cart' },
 ];
 

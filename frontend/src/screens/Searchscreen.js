@@ -10,8 +10,7 @@ import Rating from '../components/Rating';
 import Loading from '../components/Loading';
 import Msg from '../components/MassageBox';
 import Button from 'react-bootstrap/Button';
-import Product from '../components/Product';
-import LinkContainer from 'react-router-bootstrap/LinkContainer';
+import Product from '../components/Product'; 
 
 const reducer = (state, action) => {
   switch (action.type) {
