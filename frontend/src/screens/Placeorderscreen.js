@@ -42,8 +42,7 @@ export default function Placeorderscreen() {
     cart.taxPrice = round2decimals(cart.itemsPrice * 0.05);
     cart.totalPrice = round2decimals(cart.itemsPrice + cart.shippingPrice + cart.taxPrice);
   const placeorderhandler = async () => {
-        try{
-          console.log("User Info Status:", userInfo);
+        try{ 
             dispatch({type:'CREATE_REQUEST'});
             const {data} = await axiosInstance.post('/api/order',{
                  orderItems : cart.cartItems,
@@ -59,13 +58,7 @@ export default function Placeorderscreen() {
                     Authorization:`Bearer ${userInfo.token}`
                 }  
             }
-          );
-           await axiosInstance.put('/api/users/update-cart', {
-      userId: userInfo._id,
-      cartItems: []
-    }, {
-      headers: { Authorization: `Bearer ${userInfo.token}` }
-    });
+          ); 
 
     ctxDispatch({ type: 'CART_CLEAR' });
     dispatch({type: 'CREATE_SUCCESS'});
